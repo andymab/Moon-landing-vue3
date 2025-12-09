@@ -21,5 +21,28 @@ export default defineConfig({
         ]
       }
     })
-  ]
+  ],
+
+  server: {
+    host: '0.0.0.0',  // или true, или 'localhost'
+    port: 5173,
+    strictPort: false, // если порт занят, попробует другой
+    open: true,        // автоматически открыть браузер при запуске
+    cors: true,        // разрешить CORS
+    
+    // Опционально: настройка прокси для API
+    // proxy: {
+    //   '/api': {
+    //     target: 'http://localhost:3000',
+    //     changeOrigin: true
+    //   }
+    // }
+  },
+  
+  // 👇 Опционально: для production сборки
+  build: {
+    outDir: 'dist',
+    sourcemap: true,
+    chunkSizeWarningLimit: 1000
+  }
 })
