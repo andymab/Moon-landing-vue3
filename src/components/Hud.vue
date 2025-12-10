@@ -1,18 +1,22 @@
 <template>
-    <div class="hud">
-        <div class="stat"><label>Altitude</label>
-            <div>{{ altitudeDisplay }}</div>
+
+        <div class="hud">
+            <div class="hud-container">
+                <div class="stat"><label>Высота</label>
+                    <div>{{ altitudeDisplay }}</div>
+                </div>
+                <div class="stat"><label>Ускорение</label>
+                    <div>{{ velocityDisplay }}</div>
+                </div>
+                <div class="stat"><label>Топливо</label>
+                    <div>{{ fuelDisplay }}</div>
+                </div>
+                <div class="stat"><label>Уровень</label>
+                    <div>{{ turn }}</div>
+                </div>
+            </div>
         </div>
-        <div class="stat"><label>Velocity</label>
-            <div>{{ velocityDisplay }}</div>
-        </div>
-        <div class="stat"><label>Fuel</label>
-            <div>{{ fuelDisplay }}</div>
-        </div>
-        <div class="stat"><label>Turn</label>
-            <div>{{ turn }}</div>
-        </div>
-    </div>
+
 </template>
 
 <script setup>
@@ -27,23 +31,70 @@ const fuelDisplay = computed(() => `${Math.max(0, fuel.value).toFixed(1)} kg`)
 
 <style scoped>
 .hud {
+    position: absolute;
+    top: 20px;
+    left: 20px;
+    z-index: 100;
+}
+
+
+
+.hud-container {
     display: flex;
-    gap: 12px;
-    align-items: center;
-    justify-content: flex-start;
-    padding: 8px;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 100px;
 }
 
 .stat {
-    background: rgba(255, 255, 255, 0.03);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
     padding: 8px 12px;
+    background: rgba(255, 255, 255, 0.03);
     border-radius: 8px;
-    min-width: 130px
+    transition: background-color 0.2s;
+}
+
+.stat:hover {
+    background: rgba(255, 255, 255, 0.05);
 }
 
 label {
-    display: block;
-    color: #9fb;
-    font-size: 12px
+    color: #a0c8ff;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    opacity: 0.8;
+}
+
+.value {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    text-shadow: 0 0 10px rgba(100, 180, 255, 0.3);
+}
+
+/* Специальные стили для разных значений */
+.stat:nth-child(1) .value {
+    /* Altitude */
+    color: #4fc3f7;
+}
+
+.stat:nth-child(2) .value {
+    /* Velocity */
+    color: #ffb74d;
+}
+
+.stat:nth-child(3) .value {
+    /* Fuel */
+    color: #81c784;
+}
+
+.stat:nth-child(4) .value {
+    /* Turn */
+    color: #ba68c8;
 }
 </style>

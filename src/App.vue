@@ -1,16 +1,18 @@
 <template>
     <div id="app" class="app-root">
         <div class="container">
-            <Hud :altitude="altitude" :velocity="velocity" :fuel="fuel" :turn="turn" />
+
 
             <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine" />
 
+            <Hud :altitude="altitude" :velocity="velocity" :fuel="fuel" :turn="turn" />
+
             <Controls v-model:thrust="thrust" v-model:engine="activeEngine" :disabled="gameOver" @step="onStep"
                 @reset="resetGame" />
-
+            <!-- 
             <div class="debug" v-if="debugInfo">
                 <pre>{{ debugInfo }}</pre>
-            </div>
+            </div> -->
 
             <div class="message" v-if="message">{{ message }}</div>
         </div>
@@ -28,7 +30,7 @@ const maxAltitude = 1200
 const { altitude, velocity, fuel, step: physicsStep, reset, getState } = usePhysics({
     startAltitude: maxAltitude,
     startVelocity: 0,
-    startFuel: 600,
+    startFuel: 300,
     mass: 1600,
     maxThrust: 5200,
     maxConsumption: 6,
@@ -65,18 +67,9 @@ watch(thrust, (newVal) => {
 })
 
 function onStep() {
-    console.log('=== STEP CALLED ===')
-    console.log('Before step:', {
-        thrust: thrust.value,
-        engine: activeEngine.value,
-        altitude: altitude.value,
-        velocity: velocity.value,
-        fuel: fuel.value,
-        gameOver: gameOver.value
-    })
 
     if (gameOver.value) {
-        console.log('Game over, step ignored')
+        console.log('Игра окончена, шаг проигнорирован')
         return
     }
 
@@ -94,9 +87,9 @@ function onStep() {
         if (res.landed) {
             gameOver.value = true
             if (Math.abs(res.velocity) <= 5) {
-                message.value = `Touchdown! Safe landing. Velocity: ${res.velocity.toFixed(2)} m/s`
+                message.value = `Ура ТЫ совершили посадку ускорение: ${res.velocity.toFixed(2)} m/s`
             } else {
-                message.value = `Crashed! Impact velocity ${res.velocity.toFixed(2)} m/s > 5 m/s`
+                message.value = `Катастрофа слишком большое ускорение ${res.velocity.toFixed(2)} m/s > 5 m/s`
             }
             console.log('LANDED:', message.value)
             return
@@ -104,13 +97,13 @@ function onStep() {
 
         if (res.escaped) {
             gameOver.value = true
-            message.value = 'You drifted away into space. Game over.'
+            message.value = 'Ты улетел в космос. Игра окончена.'
             console.log('ESCAPED:', message.value)
             return
         }
 
         if (res.fuel <= 0 && !gameOver.value) {
-            message.value = 'Out of fuel! You cannot apply thrust anymore.'
+            message.value = 'Топливо закончилось! Вы больше не можете использовать тягу.'
             console.log('OUT OF FUEL')
         } else {
             message.value = ''
@@ -128,7 +121,6 @@ function onStep() {
 }
 
 function resetGame() {
-    console.log('=== RESET GAME ===')
     reset()
     thrust.value = 50
     activeEngine.value = 'retro'
@@ -173,5 +165,104 @@ function resetGame() {
     background: linear-gradient(#020516, #04102a);
     min-height: 100vh;
     padding: 20px;
+}
+
+
+
+/* ===== АДАПТИВНОСТЬ ===== */
+
+/* Планшеты (768px - 1024px) */
+@media (max-width: 1024px) {
+    .app-root {
+        padding: 8px;
+    }
+
+    .hud-overlay {
+        top: 15px;
+        left: 15px;
+    }
+
+    .controls-overlay {
+        top: 15px;
+        right: 15px;
+    }
+
+    .game-scene {
+        margin-top: 60px;
+    }
+}
+
+/* Мобильные устройства (до 768px) */
+@media (max-width: 768px) {
+    .app-root {
+        padding: 5px;
+    }
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    /* Перемещаем HUD и Controls в один ряд сверху */
+    .hud-overlay,
+    .controls-overlay {
+        position: static;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .hud-overlay {
+        order: 1;
+    }
+
+    .controls-overlay {
+        order: 2;
+    }
+
+    .game-scene {
+        order: 3;
+        margin-top: 0;
+        width: 100%;
+        height: 400px;
+        /* Фиксированная высота на мобильных */
+    }
+
+    .message {
+        bottom: 10px;
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+}
+
+/* Маленькие мобильные (до 480px) */
+@media (max-width: 480px) {
+    .app-root {
+        padding: 3px;
+    }
+
+    .game-scene {
+        height: 300px;
+    }
+
+    .hud-overlay .hud-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .hud-overlay .stat {
+        min-width: 80px;
+        padding: 6px 8px;
+    }
+
+    .hud-overlay label {
+        font-size: 10px;
+    }
+
+    .hud-overlay .value {
+        font-size: 16px;
+    }
 }
 </style>

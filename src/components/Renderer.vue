@@ -1,6 +1,6 @@
 <template>
     <div class="viewport">
-        <svg class="background" viewBox="0 0 1200 600" preserveAspectRatio="xMidYMid slice"
+        <svg class="background" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid slice"
             xmlns="http://www.w3.org/2000/svg">
             <defs>
                 <radialGradient id="sun">
@@ -33,17 +33,22 @@
                     <path d="M-16,6 L-40,26 L-16,36 Z" fill="#c33" />
                     <path d="M16,6 L40,26 L16,36 Z" fill="#c33" />
 
-                    <!-- Main engine flame (bottom) -->
+                    <!-- Main engine flame (bottom) - PNG/WebP версия -->
                     <g v-if="engine === 'retro' && thrust > 0" :style="{ opacity: flameOpacity }" class="flame-main">
-                        <ellipse cx="0" cy="56" rx="12" ry="28" fill="orange" />
-                        <ellipse cx="0" cy="66" rx="6" ry="16" fill="#ffd36b" />
+                        <!-- Используем foreignObject для HTML-контента -->
+                        <foreignObject x="-20" y="28" width="40" height="40">
+                            <img xmlns="http://www.w3.org/1999/xhtml" :src="flameImage" alt="Engine flame" :style="flameStyle" />
+                        </foreignObject>
                     </g>
 
                     <!-- Retro engine flame (top) -->
                     <g v-if="engine === 'main' && thrust > 0" transform="translate(0,-100)"
                         :style="{ opacity: flameOpacity }" class="flame-retro">
-                        <ellipse cx="0" cy="-10" rx="8" ry="18" fill="#ffb" />
+                        <foreignObject x="-15" y="-28" width="30" height="30">
+                            <img xmlns="http://www.w3.org/1999/xhtml" :src="retroFlameImage" alt="Retro engine flame"  :style="flameStyle"  />
+                        </foreignObject>
                     </g>
+
                 </g>
             </svg>
         </div>
@@ -51,9 +56,16 @@
 </template>
 
 <script setup>
+//main  * (1 + thrust * 0.3)
+//Retro * (1 + thrust * 0.2)
 import { computed } from 'vue'
 
 const moonSurfaceImage = '/moon-surface.png'
+import flameImage from '/flame.png' // или flame.webp
+import retroFlameImage from '/flame-retro.png'
+
+
+
 
 const props = defineProps({
     altitude: Number,
@@ -62,6 +74,16 @@ const props = defineProps({
     engine: String,
     maxAltitude: { type: Number, default: 1200 }
 })
+
+const flameStyle = computed(() => ({
+    width: '100%',
+    height: `100%`,
+    objectFit: 'contain',
+    objectPosition: 'top',
+    filter: `brightness(${1 + props.thrust * 0.02})`,
+    transition: 'all 0.1s ease-out'
+}))
+
 
 // stable stars
 const stars = Array.from({ length: 120 }, (_, i) => ({
@@ -73,7 +95,7 @@ const stars = Array.from({ length: 120 }, (_, i) => ({
 
 const sunX = 140
 const sunY = 140
-const viewportH = 764 // высота viewport
+const viewportH = 650 // высота viewport
 
 // Параметры поверхности
 const CONTAINER_HEIGHT_PERCENT = 40 // 40% от высоты viewport
@@ -81,12 +103,24 @@ const CONTAINER_HEIGHT = viewportH * (CONTAINER_HEIGHT_PERCENT / 100) // 305px �
 
 // Вычисляем положение верхней границы поверхности (surfaceY)
 const surfaceY = computed(() => {
-    const alt = Math.max(0, Math.min(props.maxAltitude ?? 1200, props.altitude ?? (props.maxAltitude ?? 1200)))
-    const t = alt / (props.maxAltitude ?? 1200) // 1 = far, 0 = landed
-
-    // Когда t=1 (далеко): картинка полностью скрыта (top = CONTAINER_HEIGHT)
-    // Когда t=0 (посадка): картинка полностью видна (top = 0)
-    return CONTAINER_HEIGHT * t
+    const alt = Math.max(0, Math.min(props.maxAltitude, props.altitude ?? props.maxAltitude))
+    const t = alt / props.maxAltitude // 1 = высоко, 0 = низко
+    
+    // Начальное значение top должно быть таким, чтобы было видно только 10% изображения
+    // Если CONTAINER_HEIGHT = 260px, то 10% от 260px = 26px
+    // Значит top должен быть: CONTAINER_HEIGHT - видимаяЧасть = 260 - 26 = 234px
+    
+    const VISIBLE_PERCENT_AT_START = 0.1 // 10%
+    const START_TOP = CONTAINER_HEIGHT * (1 - VISIBLE_PERCENT_AT_START) // 234px
+    
+    // Конечное значение top = 0 (вся поверхность видна)
+    const END_TOP = 0
+    
+    // Линейная интерполяция
+    return START_TOP * t + END_TOP * (1 - t)
+    
+    // Или проще:
+    // return CONTAINER_HEIGHT * (1 - VISIBLE_PERCENT_AT_START) * t
 })
 
 // Вычисляем прогресс от 0 до 1 (0 - далеко, 1 - близко)
@@ -109,6 +143,14 @@ const surfaceImageStyle = computed(() => {
         transition: 'top 0.2s ease-out'
     }
 })
+
+// Можно динамически менять изображение в зависимости от тяги
+const dynamicFlameImage = computed(() => {
+    if (props.thrust > 0.8) return highPowerFlameImage
+    return flameImage
+})
+
+
 
 // --- ship positioning: ensure visual contact aligns with physics ---
 const shipVisualHeight = 200
@@ -145,7 +187,7 @@ const shipStyle = computed(() => {
 .viewport {
     position: relative;
     width: 100%;
-    height: 650px;
+    height: 650px; /** 650 */
     max-width: 1100px;
     margin-top: 12px;
     overflow: hidden;
@@ -183,8 +225,8 @@ const shipStyle = computed(() => {
 .surface-img {
     position: absolute;
     left: 0;
-    width: 100%;
-    height: auto;
+    width: auto;
+    height: 100%;
     /* Сохраняем пропорции */
     min-height: 100%;
     /* Минимум на всю высоту контейнера */
@@ -194,6 +236,9 @@ const shipStyle = computed(() => {
     /* Важная часть изображения сверху */
     pointer-events: none;
     z-index: 2;
+
+    /* top: -300px;
+    transition: top 0.2s ease-out; */
 }
 
 .ship {
@@ -206,9 +251,34 @@ const shipStyle = computed(() => {
     will-change: transform;
 }
 
-.flame-main ellipse,
-.flame-retro ellipse {
-    filter: blur(0.6px);
-    transform-origin: center;
+.flame-image {
+    animation: flameFlicker 0.3s infinite alternate;
+    transform-origin: center bottom;
+}
+
+.flame-image.retro {
+    animation: flameFlickerRetro 0.3s infinite alternate;
+    transform-origin: center top;
+}
+
+/* Анимация пламени */
+@keyframes flameFlicker {
+    0% {
+        transform: scaleY(1);
+    }
+
+    100% {
+        transform: scaleY(1.15);
+    }
+}
+
+@keyframes flameFlickerRetro {
+    0% {
+        transform: scaleY(1) rotate(180deg);
+    }
+
+    100% {
+        transform: scaleY(1.1) rotate(180deg);
+    }
 }
 </style>
