@@ -44,6 +44,11 @@ const engineBuffer = ref(null)
 const fuelWarningBuffer = ref(null)
 const landingBuffer = ref(null)
 const crashBuffer = ref(null)
+const crashHorrorBuffer = ref(null)
+
+
+const buttonSoundBuffer = ref(null)
+const buttonAudio = ref(null)
 
 // Инициализация аудио
 async function initAudio() {
@@ -66,11 +71,25 @@ async function initAudio() {
         gainNode.gain.value = 0
         pannerNode.pan.value = 0 // Центр
 
-        // Загружаем звук двигателя
-        await loadAudioFile('/sounds/engine.wav').then(buffer => {
-            engineBuffer.value = buffer
-            engineSound.value.buffer = buffer
-        })
+        await Promise.all([
+            loadAudioFile('/sounds/engine.wav').then(buffer => {
+                engineBuffer.value = buffer
+                engineSound.value.buffer = buffer
+            }),
+            loadAudioFile('/sounds/button-step.wav').then(buffer => {
+                buttonSoundBuffer.value = buffer
+            }),
+            loadAudioFile('/sounds/crash.wav').then(buffer => {
+                crashBuffer.value = buffer
+            }),
+            loadAudioFile('/sounds/crash-horror.wav').then(buffer => {
+                crashHorrorBuffer.value = buffer
+            }),
+            loadAudioFile('/sounds/landing.wav').then(buffer => {
+                landingBuffer.value = buffer
+            })
+            
+        ])
 
         console.log('Audio initialized successfully')
     } catch (error) {
@@ -222,12 +241,169 @@ function playVoiceMessage(message) {
 function playLandingSound() {
     console.log('Playing landing sound')
     // Здесь будет логика воспроизведения звука посадки
+  if (!audioContext.value || !landingBuffer.value) {
+        console.warn('Crash sounds not loaded')
+        return
+    }
+
+    try {
+        // Останавливаем звук двигателя при приземлении
+        stopEngineSound()
+
+        // 1. Первый звук - crash.wav
+        const landingSource = audioContext.value.createBufferSource()
+        landingSource.buffer = landingBuffer.value
+
+        const landingGain = audioContext.value.createGain()
+        landingGain.gain.value = 0.6 // Громкость 60%
+
+        landingSource.connect(landingGain)
+        landingGain.connect(audioContext.value.destination)
+
+        // Запускаем первый звук
+        landingSource.start(0)
+        console.log('First crash sound started')
+
+        // Получаем длительность первого звука
+        const firstSoundDuration = landingBuffer.value.duration
+
+        // 2. Второй звук - crash-horror.wav запускаем после окончания первого
+        // landingSource.onended = () => {
+        //     console.log('First crash sound ended, starting horror sound')
+
+        //     const successLandingSource = audioContext.value.createBufferSource()
+        //     successLandingSource.buffer = successLandingBuffer.value
+
+        //     const successGain = audioContext.value.createGain()
+        //     successGain.gain.value = 0.7 // Громкость 70%
+
+        //     successLandingSource.connect(successGain)
+        //     successGain.connect(audioContext.value.destination)
+
+        //     // Небольшая пауза между звуками (0.3 секунды)
+        //     setTimeout(() => {
+        //         successLandingSource.start(0)
+        //         console.log('Horror crash sound started')
+
+        //         successLandingSource.onended = () => {
+        //             console.log('Crash sound sequence completed')
+        //         }
+        //     }, 300)
+        // }
+
+    } catch (error) {
+        console.error('Failed to play crash sound:', error)
+    }
+
+
 }
 
 // Звук крушения
 function playCrashSound() {
     console.log('Playing crash sound')
-    // Здесь будет логика воспроизведения звука крушения
+
+    if (!audioContext.value || !crashBuffer.value || !crashHorrorBuffer.value) {
+        console.warn('Crash sounds not loaded')
+        return
+    }
+
+    try {
+        // Останавливаем звук двигателя при крушении
+        stopEngineSound()
+
+        // 1. Первый звук - crash.wav
+        const crashSource = audioContext.value.createBufferSource()
+        crashSource.buffer = crashBuffer.value
+
+        const crashGain = audioContext.value.createGain()
+        crashGain.gain.value = 0.6 // Громкость 60%
+
+        crashSource.connect(crashGain)
+        crashGain.connect(audioContext.value.destination)
+
+        // Запускаем первый звук
+        crashSource.start(0)
+        console.log('First crash sound started')
+
+        // Получаем длительность первого звука
+        const firstSoundDuration = crashBuffer.value.duration
+
+        // 2. Второй звук - crash-horror.wav запускаем после окончания первого
+        crashSource.onended = () => {
+            console.log('First crash sound ended, starting horror sound')
+
+            const horrorSource = audioContext.value.createBufferSource()
+            horrorSource.buffer = crashHorrorBuffer.value
+
+            const horrorGain = audioContext.value.createGain()
+            horrorGain.gain.value = 0.7 // Громкость 70%
+
+            horrorSource.connect(horrorGain)
+            horrorGain.connect(audioContext.value.destination)
+
+            // Небольшая пауза между звуками (0.3 секунды)
+            setTimeout(() => {
+                horrorSource.start(0)
+                console.log('Horror crash sound started')
+
+                horrorSource.onended = () => {
+                    console.log('Crash sound sequence completed')
+                }
+            }, 300)
+        }
+
+    } catch (error) {
+        console.error('Failed to play crash sound:', error)
+    }
+}
+
+// Альтернативная версия с одновременным воспроизведением (если нужно)
+function playCrashSoundSimultaneous() {
+    console.log('Playing crash sounds simultaneously')
+
+    if (!audioContext.value || !crashBuffer.value || !crashHorrorBuffer.value) {
+        console.warn('Crash sounds not loaded')
+        return
+    }
+
+    try {
+        // Останавливаем звук двигателя
+        stopEngineSound()
+
+        // 1. Первый звук - crash.wav (громкий и резкий)
+        const crashSource = audioContext.value.createBufferSource()
+        crashSource.buffer = crashBuffer.value
+
+        const crashGain = audioContext.value.createGain()
+        crashGain.gain.value = 0.8
+
+        crashSource.connect(crashGain)
+        crashGain.connect(audioContext.value.destination)
+
+        // 2. Второй звук - crash-horror.wav (с небольшой задержкой)
+        const horrorSource = audioContext.value.createBufferSource()
+        horrorSource.buffer = crashHorrorBuffer.value
+
+        const horrorGain = audioContext.value.createGain()
+        horrorGain.gain.value = 0.5
+
+        // Создаем задержку для второго звука (0.5 секунды)
+        const delayNode = audioContext.value.createDelay()
+        delayNode.delayTime.value = 0.5
+
+        horrorSource.connect(delayNode)
+        delayNode.connect(horrorGain)
+        horrorGain.connect(audioContext.value.destination)
+
+        // Запускаем оба звука
+        crashSource.start(0)
+        horrorSource.start(0)
+
+        console.log('Both crash sounds started')
+
+    } catch (error) {
+        console.error('Failed to play crash sounds:', error)
+    }
 }
 
 // Предупреждение о низком топливе
@@ -235,6 +411,69 @@ function playFuelWarning() {
     console.log('Playing fuel warning')
     // Здесь будет логика предупреждения
 }
+
+function playStepSound() {
+    console.log('Playing +++step+++ sound')
+    playButtonSound() // Используем ту же функцию, что и в способе 1
+}
+
+
+function playButtonSound() {
+    if (!audioContext.value || !buttonSoundBuffer.value) {
+        // Если нет загруженного звука, создаем простой бип
+        playBeepSound()
+        return
+    }
+
+    try {
+        // Создаем источник для одноразового звука
+        const source = audioContext.value.createBufferSource()
+        source.buffer = buttonSoundBuffer.value
+
+        const gainNode = audioContext.value.createGain()
+        gainNode.gain.value = 0.04 // 30% громкость
+
+        source.connect(gainNode)
+        gainNode.connect(audioContext.value.destination)
+
+        source.start(0)
+
+        // Очищаем ссылку после завершения
+        source.onended = () => {
+            source.disconnect()
+        }
+
+        console.log('Button sound played')
+    } catch (error) {
+        console.error('Failed to play button sound:', error)
+        // Fallback на простой бип
+        playBeepSound()
+    }
+}
+// Простой бип-звук (fallback)
+function playBeepSound() {
+    try {
+        const oscillator = audioContext.value.createOscillator()
+        const gainNode = audioContext.value.createGain()
+
+        oscillator.frequency.value = 800 // Частота в Гц
+        oscillator.type = 'sine'
+
+        gainNode.gain.value = 0.1
+        gainNode.gain.exponentialRampToValueAtTime(0.001, audioContext.value.currentTime + 0.1)
+
+        oscillator.connect(gainNode)
+        gainNode.connect(audioContext.value.destination)
+
+        oscillator.start()
+        oscillator.stop(audioContext.value.currentTime + 0.1)
+
+        console.log('Beep sound played')
+    } catch (error) {
+        console.error('Failed to play beep:', error)
+    }
+}
+
 
 // Наблюдатели
 watch(() => props.thrust, updateEngineSound)
@@ -262,5 +501,13 @@ onUnmounted(() => {
     if (audioContext.value) {
         audioContext.value.close()
     }
+})
+
+defineExpose({
+    playStepSound,
+    playCrashSound,
+    playLandingSound,
+    stopEngineSound,
+    // при необходимости можно добавить другие методы
 })
 </script>

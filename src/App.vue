@@ -3,12 +3,16 @@
         <div class="container">
 
 
-            <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine" />
+            <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine" :fuel="fuel" />
 
             <Hud :altitude="altitude" :velocity="velocity" :fuel="fuel" :turn="turn" />
 
             <Controls v-model:thrust="thrust" v-model:engine="activeEngine" :disabled="gameOver" @step="onStep"
                 @reset="resetGame" />
+
+            <AudioManager :thrust="thrust" :engine="activeEngine" :altitude="altitude" :velocity="velocity" :fuel="fuel"
+                :gameOver="gameOver" :message="message" :isLanded="isLanded" ref="audioManager" />
+
             <!-- 
             <div class="debug" v-if="debugInfo">
                 <pre>{{ debugInfo }}</pre>
@@ -20,14 +24,15 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onMounted } from 'vue'
 import { usePhysics } from './composables/usePhysics'
 import Hud from './components/Hud.vue'
 import Controls from './components/Controls.vue'
 import Renderer from './components/Renderer.vue'
+import AudioManager from './components/AudioManager.vue'
 
 const maxAltitude = 1200
-const { altitude, velocity, fuel, step: physicsStep, reset, getState } = usePhysics({
+const { altitude, velocity, fuel, step: physicsStep, reset, getState, soundEvents, isEngineActive, hasFuel } = usePhysics({
     startAltitude: maxAltitude,
     startVelocity: 0,
     startFuel: 300,
@@ -44,6 +49,21 @@ const turn = ref(0)
 const message = ref('')
 const gameOver = ref(false)
 
+// Добавляем ref для AudioManager
+// Добавляем ref для AudioManager
+const audioManager = ref(null)
+
+// Добавим console.log для отладки ref
+onMounted(() => {
+    console.log('App mounted, audioManager ref:', audioManager.value)
+})
+
+
+// свойство для определения посадки
+const isLanded = computed(() => {
+    return altitude.value <= 0 && !gameOver.value
+})
+
 // Отладочная информация
 const debugInfo = computed(() => {
     const state = getState ? getState() : null
@@ -56,10 +76,20 @@ const debugInfo = computed(() => {
         velocity: velocity.value,
         fuel: fuel.value,
         state: state,
+        soundEvents: soundEvents.value, // Добавляем звуковые события
         isDescending: velocity.value > 0.1,
         isAscending: velocity.value < -0.1
     }
 })
+
+// Watch для звуковых событий
+watch(soundEvents, (newEvents) => {
+    if (newEvents.length > 0) {
+        console.log('Sound events detected:', newEvents)
+        // Здесь можно добавить логику обработки звуковых событий
+        // или передать их в AudioManager через props
+    }
+}, { deep: true })
 
 // Добавим watch для отслеживания изменений thrust
 watch(thrust, (newVal) => {
@@ -67,11 +97,35 @@ watch(thrust, (newVal) => {
 })
 
 function onStep() {
+    // Проигрываем звук кнопки
+    console.log('audioManager ref:', audioManager.value)
+
+    // Проигрываем звук кнопки
+    if (audioManager.value && audioManager.value.playStepSound) {
+        console.log('Calling playStepSound...')
+        audioManager.value.playStepSound()
+    } else {
+        console.error('Cannot call playStepSound:')
+        console.error('- audioManager.value:', audioManager.value)
+        console.error('- playStepSound exists:', audioManager.value?.playStepSound)
+
+        // Попробуем альтернативный метод
+        setTimeout(() => {
+            console.log('Trying again after timeout...')
+            if (audioManager.value && audioManager.value.playStepSound) {
+                audioManager.value.playStepSound()
+            }
+        }, 100)
+    }
+
+
 
     if (gameOver.value) {
         console.log('Игра окончена, шаг проигнорирован')
         return
     }
+
+
 
     turn.value += 1
     try {
@@ -83,7 +137,6 @@ function onStep() {
         })
 
         console.log('After step result:', res)
-
         if (res.landed) {
             gameOver.value = true
             if (Math.abs(res.velocity) <= 5) {
@@ -105,6 +158,9 @@ function onStep() {
         if (res.fuel <= 0 && !gameOver.value) {
             message.value = 'Топливо закончилось! Вы больше не можете использовать тягу.'
             console.log('OUT OF FUEL')
+            setTimeout(() => {
+                audioManager.value.stopEngineSound()
+            }, 300)
         } else {
             message.value = ''
         }
@@ -113,6 +169,31 @@ function onStep() {
         altitude.value = res.altitude
         velocity.value = res.velocity
         fuel.value = res.fuel
+
+
+        // Логируем звуковые события
+        if (res.soundEvents && res.soundEvents.length > 0) {
+            console.log('Sound events:', res.soundEvents)
+
+            res.soundEvents.forEach(event => {
+                if (audioManager.value) {
+                    if (event.type === 'crash' && audioManager.value.playCrashSound) {
+                        console.log('Direct crash sound trigger')
+                        audioManager.value.playCrashSound()
+                    }
+                    if (event.type === 'landing_success' && audioManager.value.playLandingSound) {
+                        console.log('Direct landing sound trigger')
+                        // Задержка для лучшего эффекта
+                        setTimeout(() => {
+                            audioManager.value.playLandingSound()
+                        }, 300)
+                    }
+
+
+                }
+            })
+
+        }
 
     } catch (error) {
         console.error('Error in physicsStep:', error)
@@ -128,6 +209,8 @@ function resetGame() {
     message.value = ''
     gameOver.value = false
 }
+
+
 </script>
 
 

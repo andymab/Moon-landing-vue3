@@ -1,57 +1,65 @@
 <template>
     <div class="viewport">
-        <svg class="background" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid slice"
-            xmlns="http://www.w3.org/2000/svg">
-            <defs>
-                <radialGradient id="sun">
-                    <stop offset="0%" stop-color="#fff6c2" />
-                    <stop offset="100%" stop-color="#ffd27a" stop-opacity="0.08" />
-                </radialGradient>
-            </defs>
+        <template v-if="fuel">
+            <svg class="background" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid slice"
+                xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <radialGradient id="sun">
+                        <stop offset="0%" stop-color="#fff6c2" />
+                        <stop offset="100%" stop-color="#ffd27a" stop-opacity="0.08" />
+                    </radialGradient>
+                </defs>
 
-            <rect width="1200" height="650" fill="#020516" />
-            <g v-for="(s, i) in stars" :key="i">
-                <circle :cx="s.x" :cy="s.y + bgOffset" :r="s.r" fill="#fff" :opacity="s.o" />
-            </g>
-
-            <circle :cx="sunX" :cy="sunY" r="90" fill="url(#sun)" :opacity="0.22" />
-        </svg>
-
-        <!-- Контейнер поверхности Луны (40% высоты, прижат к низу) -->
-        <div class="moon-surface-container">
-            <!-- Картинка поверхности, которая поднимается -->
-            <img :src="moonSurfaceImage" alt="Moon surface" class="surface-img" :style="surfaceImageStyle" />
-        </div>
-
-        <!-- Rocket (absolute) -->
-        <div class="ship" :style="shipStyle" aria-hidden="false">
-            <svg width="90" height="260" viewBox="0 0 90 200" xmlns="http://www.w3.org/2000/svg">
-                <g transform="translate(45,100)">
-                    <ellipse cx="0" cy="-20" rx="14" ry="42" fill="#e6e6e6" stroke="#999" />
-                    <rect x="-16" y="-66" width="32" height="36" rx="8" fill="#cfcfcf" stroke="#999" />
-                    <polygon points="-16,-66 0,-90 16,-66" fill="#d6d6d6" stroke="#999" />
-                    <path d="M-16,6 L-40,26 L-16,36 Z" fill="#c33" />
-                    <path d="M16,6 L40,26 L16,36 Z" fill="#c33" />
-
-                    <!-- Main engine flame (bottom) - PNG/WebP версия -->
-                    <g v-if="engine === 'retro' && thrust > 0" :style="{ opacity: flameOpacity }" class="flame-main">
-                        <!-- Используем foreignObject для HTML-контента -->
-                        <foreignObject x="-20" y="28" width="40" height="40">
-                            <img xmlns="http://www.w3.org/1999/xhtml" :src="flameImage" alt="Engine flame" :style="flameStyle" />
-                        </foreignObject>
-                    </g>
-
-                    <!-- Retro engine flame (top) -->
-                    <g v-if="engine === 'main' && thrust > 0" transform="translate(0,-100)"
-                        :style="{ opacity: flameOpacity }" class="flame-retro">
-                        <foreignObject x="-15" y="-28" width="30" height="30">
-                            <img xmlns="http://www.w3.org/1999/xhtml" :src="retroFlameImage" alt="Retro engine flame"  :style="flameStyle"  />
-                        </foreignObject>
-                    </g>
-
+                <rect width="1200" height="650" fill="#020516" />
+                <g v-for="(s, i) in stars" :key="i">
+                    <circle :cx="s.x" :cy="s.y + bgOffset" :r="s.r" fill="#fff" :opacity="s.o" />
                 </g>
+
+                <circle :cx="sunX" :cy="sunY" r="90" fill="url(#sun)" :opacity="0.22" />
             </svg>
-        </div>
+
+            <!-- Контейнер поверхности Луны (40% высоты, прижат к низу) -->
+            <div class="moon-surface-container">
+                <!-- Картинка поверхности, которая поднимается -->
+                <img :src="moonSurfaceImage" alt="Moon surface" class="surface-img" :style="surfaceImageStyle" />
+            </div>
+
+            <!-- Rocket (absolute) -->
+            <div class="ship" :style="shipStyle" aria-hidden="false">
+                <svg width="90" height="260" viewBox="0 0 90 200" xmlns="http://www.w3.org/2000/svg">
+                    <g transform="translate(45,100)">
+                        <ellipse cx="0" cy="-20" rx="14" ry="42" fill="#e6e6e6" stroke="#999" />
+                        <rect x="-16" y="-66" width="32" height="36" rx="8" fill="#cfcfcf" stroke="#999" />
+                        <polygon points="-16,-66 0,-90 16,-66" fill="#d6d6d6" stroke="#999" />
+                        <path d="M-16,6 L-40,26 L-16,36 Z" fill="#c33" />
+                        <path d="M16,6 L40,26 L16,36 Z" fill="#c33" />
+
+                        <!-- Main engine flame (bottom) - PNG/WebP версия -->
+                        <g v-if="engine === 'retro' && thrust > 0" :style="{ opacity: flameOpacity }"
+                            class="flame-main">
+                            <!-- Используем foreignObject для HTML-контента -->
+                            <foreignObject x="-20" y="28" width="40" height="40">
+                                <img xmlns="http://www.w3.org/1999/xhtml" :src="flameImage" alt="Engine flame"
+                                    :style="flameStyle" />
+                            </foreignObject>
+                        </g>
+
+                        <!-- Retro engine flame (top) -->
+                        <g v-if="engine === 'main' && thrust > 0" transform="translate(0,-100)"
+                            :style="{ opacity: flameOpacity }" class="flame-retro">
+                            <foreignObject x="-15" y="-28" width="30" height="30">
+                                <img xmlns="http://www.w3.org/1999/xhtml" :src="retroFlameImage"
+                                    alt="Retro engine flame" :style="flameStyle" />
+                            </foreignObject>
+                        </g>
+
+                    </g>
+                </svg>
+            </div>
+        </template>
+        <template v-else>
+             <img :src="fuelEmty" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+       </template>
     </div>
 </template>
 
@@ -61,6 +69,7 @@
 import { computed } from 'vue'
 
 const moonSurfaceImage = '/moon-surface.png'
+const fuelEmty = '/fuel-empty.png'
 import flameImage from '/flame.png' // или flame.webp
 import retroFlameImage from '/flame-retro.png'
 
@@ -72,7 +81,8 @@ const props = defineProps({
     velocity: Number,
     thrust: Number,
     engine: String,
-    maxAltitude: { type: Number, default: 1200 }
+    maxAltitude: { type: Number, default: 1200 },
+    fuel: Number
 })
 
 const flameStyle = computed(() => ({
@@ -105,20 +115,20 @@ const CONTAINER_HEIGHT = viewportH * (CONTAINER_HEIGHT_PERCENT / 100) // 305px �
 const surfaceY = computed(() => {
     const alt = Math.max(0, Math.min(props.maxAltitude, props.altitude ?? props.maxAltitude))
     const t = alt / props.maxAltitude // 1 = высоко, 0 = низко
-    
+
     // Начальное значение top должно быть таким, чтобы было видно только 10% изображения
     // Если CONTAINER_HEIGHT = 260px, то 10% от 260px = 26px
     // Значит top должен быть: CONTAINER_HEIGHT - видимаяЧасть = 260 - 26 = 234px
-    
+
     const VISIBLE_PERCENT_AT_START = 0.1 // 10%
     const START_TOP = CONTAINER_HEIGHT * (1 - VISIBLE_PERCENT_AT_START) // 234px
-    
+
     // Конечное значение top = 0 (вся поверхность видна)
     const END_TOP = 0
-    
+
     // Линейная интерполяция
     return START_TOP * t + END_TOP * (1 - t)
-    
+
     // Или проще:
     // return CONTAINER_HEIGHT * (1 - VISIBLE_PERCENT_AT_START) * t
 })
@@ -187,7 +197,8 @@ const shipStyle = computed(() => {
 .viewport {
     position: relative;
     width: 100%;
-    height: 650px; /** 650 */
+    height: 650px;
+    /** 650 */
     max-width: 1100px;
     margin-top: 12px;
     overflow: hidden;
@@ -221,6 +232,11 @@ const shipStyle = computed(() => {
     /* Прозрачный фон */
 }
 
+.full-img {
+height: 100%;
+
+
+}
 /* Картинка поверхности - изначально скрыта снизу */
 .surface-img {
     position: absolute;
