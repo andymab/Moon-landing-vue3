@@ -251,7 +251,7 @@ height: 100%;
 .surface-img {
     position: absolute;
     left: 0;
-    width: auto;
+    width: 100%;
     height: 100%;
     /* Сохраняем пропорции */
     min-height: 100%;
