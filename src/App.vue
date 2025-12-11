@@ -43,7 +43,7 @@ const { altitude, velocity, fuel, step: physicsStep, reset, getState, soundEvent
     maxAltitude
 })
 
-const thrust = ref(50)
+const thrust = ref(0)
 const activeEngine = ref('retro')
 const turn = ref(0)
 const message = ref('')

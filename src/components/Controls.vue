@@ -7,12 +7,12 @@
                 <label class="radio-label" :class="{ active: engineLocal === 'retro' }">
                     <input type="radio" v-model="engineLocal" value="retro" />
                     <span class="radio-dot"></span>
-                    <span class="radio-text">Тяга (↑)</span>
+                    <span class="radio-text">Торможение (↑)</span>
                 </label>
                 <label class="radio-label" :class="{ active: engineLocal === 'main' }">
                     <input type="radio" v-model="engineLocal" value="main" />
                     <span class="radio-dot"></span>
-                    <span class="radio-text">Тяга (↓)</span>
+                    <span class="radio-text">Спуск (↓)</span>
                 </label>
             </div>
         </div>
