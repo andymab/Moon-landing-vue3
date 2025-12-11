@@ -78,7 +78,7 @@
 //Retro * (1 + thrust * 0.2)
 import { computed } from 'vue'
 
-const startMoon = '/start-moon.png'
+const startMoon = '/start-moon169.jpg'
 const moonSurfaceImage = '/moon-surface.png'
 const fuelEmty = '/fuel-empty.png'
 const success_landing='/success-landing.png'
