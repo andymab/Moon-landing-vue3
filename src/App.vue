@@ -141,8 +141,14 @@ function onStep() {
             gameOver.value = true
             if (Math.abs(res.velocity) <= 5) {
                 message.value = `Ура ТЫ совершили посадку ускорение: ${res.velocity.toFixed(2)} m/s`
+                setTimeout(() => {
+                    audioManager.value.playLandingSound()
+                }, 300)
             } else {
                 message.value = `Катастрофа слишком большое ускорение ${res.velocity.toFixed(2)} m/s > 5 m/s`
+                setTimeout(() => {
+                    audioManager.value.playCrashSound()
+                }, 300)
             }
             console.log('LANDED:', message.value)
             return
@@ -177,17 +183,17 @@ function onStep() {
 
             res.soundEvents.forEach(event => {
                 if (audioManager.value) {
-                    if (event.type === 'crash' && audioManager.value.playCrashSound) {
-                        console.log('Direct crash sound trigger')
-                        audioManager.value.playCrashSound()
-                    }
-                    if (event.type === 'landing_success' && audioManager.value.playLandingSound) {
-                        console.log('Direct landing sound trigger')
-                        // Задержка для лучшего эффекта
-                        setTimeout(() => {
-                            audioManager.value.playLandingSound()
-                        }, 300)
-                    }
+                    // if (event.type === 'crash' && audioManager.value.playCrashSound) {
+                    //     console.log('Direct crash sound trigger')
+                    //     audioManager.value.playCrashSound()
+                    // }
+                    // if (event.type === 'landing_success' && audioManager.value.playLandingSound) {
+                    //     console.log('Direct landing sound trigger')
+                    //     // Задержка для лучшего эффекта
+                    //     setTimeout(() => {
+                    //         audioManager.value.playLandingSound()
+                    //     }, 300)
+                    // }
 
 
                 }

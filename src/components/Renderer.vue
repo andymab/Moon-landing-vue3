@@ -1,6 +1,6 @@
 <template>
     <div class="viewport">
-        <template v-if="fuel">
+        <template v-if="fuel && altitude > 0">
             <svg class="background" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid slice"
                 xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -57,9 +57,16 @@
                 </svg>
             </div>
         </template>
-        <template v-else>
+        <template v-if="fuel == 0">
              <img :src="fuelEmty" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
        </template>
+       <template v-if="altitude <= 0 && velocity < 5">
+             <img :src="success_landing" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+       </template>
+       <template v-else>
+             <img :src="crash_landing" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+       </template>
+
     </div>
 </template>
 
@@ -70,6 +77,9 @@ import { computed } from 'vue'
 
 const moonSurfaceImage = '/moon-surface.png'
 const fuelEmty = '/fuel-empty.png'
+const success_landing='/success-landing.png'
+const crash_landing = '/crash-landing.png'
+
 import flameImage from '/flame.png' // или flame.webp
 import retroFlameImage from '/flame-retro.png'
 

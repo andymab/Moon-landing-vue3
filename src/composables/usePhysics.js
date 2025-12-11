@@ -68,7 +68,7 @@ export function usePhysics(opts = {}) {
             if (altitude.value <= 0) {
                 const impactVelocity = velocity.value
                 altitude.value = 0
-                velocity.value = 0
+                //velocity.value = 0
 
                 // Звуковые события посадки/крушения
                 if (Math.abs(impactVelocity) > 3) {
@@ -158,7 +158,7 @@ export function usePhysics(opts = {}) {
         if (altitude.value <= 0) {
             const impactVelocity = velocity.value
             altitude.value = 0
-            velocity.value = 0
+            //velocity.value = 0
 
             // Звуковые события посадки/крушения
             if (Math.abs(impactVelocity) > 3) {
