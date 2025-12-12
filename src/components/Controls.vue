@@ -2,24 +2,59 @@
     <div class="controls">
 
         <div class="control-group">
-            <h4>Двигатель:</h4>
+            <h4>Тяга:</h4>
+
             <div class="radio-group">
+                <label class="radio-label info">
+                    {{ Math.round(thrustLocal) }}%
+                </label>
                 <label class="radio-label" :class="{ active: engineLocal === 'retro' }">
                     <input type="radio" v-model="engineLocal" value="retro" />
-                    <span class="radio-dot"></span>
-                    <span class="radio-text">Торможение (↑)</span>
+                    <!-- <span class="radio-dot"></span> -->
+                    <svg class="thrust-icon" viewBox="0 0 24 24" width="48" height="48"
+                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+                        <title>Thrust Up</title>
+                        <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <!-- arrow shaft -->
+                            <path d="M12 18 V6" />
+                            <!-- arrow head -->
+                            <path d="M7.5 10.5 L12 6 L16.5 10.5" />
+                            <!-- flame / thrust lines -->
+                            <path
+                                d="M9.2 19c-.6-1.2-.8-2.6-.4-3.8C9.3 13.4 10.5 12.6 12 12.6s2.7.8 3.2 2.6c.4 1.2.2 2.6-.4 3.8" />
+                            <path d="M8 21c-.8-1.6-.8-3.2 0-4.6" opacity="0.9" />
+                            <path d="M16 21c.8-1.6.8-3.2 0-4.6" opacity="0.9" />
+                        </g>
+                    </svg>
+                    <!-- <span class="radio-text">Торможение (↑)</span> -->
                 </label>
                 <label class="radio-label" :class="{ active: engineLocal === 'main' }">
                     <input type="radio" v-model="engineLocal" value="main" />
-                    <span class="radio-dot"></span>
-                    <span class="radio-text">Спуск (↓)</span>
+                    <svg class="thrust-icon" viewBox="0 0 24 24" width="48" height="48"
+                        xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
+                        <title>Thrust Down</title>
+                        <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <!-- arrow shaft -->
+                            <path d="M12 6v12" />
+                            <!-- arrow head (down) -->
+                            <path d="M7.5 13.5 L12 18 L16.5 13.5" />
+                            <!-- flame / thrust lines (top side for down-thrust) -->
+                            <path
+                                d="M9.2 5c-.6 1.2-.8 2.6-.4 3.8C9.3 10.6 10.5 11.4 12 11.4s2.7-.8 3.2-2.6c.4-1.2.2-2.6-.4-3.8" />
+                            <path d="M8 3c-.8 1.6-.8 3.2 0 4.6" opacity="0.9" />
+                            <path d="M16 3c.8 1.6.8 3.2 0 4.6" opacity="0.9" />
+                        </g>
+                    </svg>
+                    <!-- <span class="radio-text">Спуск (↓)</span> -->
                 </label>
             </div>
         </div>
 
 
         <div class="control-row">
-            <label>Мощность: {{ Math.round(thrustLocal) }}%</label>
+            <label>Мощность: </label>
             <input type="range" min="0" max="100" v-model.number="thrustLocal" />
         </div>
 
@@ -47,13 +82,19 @@ function emitReset() { emit('reset') }
 
 <style scoped>
 .controls {
+    position: absolute;
+    bottom: 0;
+    z-index: 10;
+
+
     display: flex;
     gap: 12px;
     flex-wrap: wrap;
     align-items: center;
-    padding-top: 10px;
-    /* background: rgba(255, 255, 255, 0.02); */
-    border-radius: 8px;
+    padding: 10px;
+    background-color: #020516;
+    /* background: rgba(255, 255, 255, 0.03); */
+    /* border-radius: 8px; */
 }
 
 .control-row {
@@ -88,11 +129,12 @@ button:disabled {
 .control-group {
     display: flex;
     align-items: center;
-    justify-content: space-between ;
+    justify-content: space-between;
     width: 100%;
 }
 
-.control-group h4, label {
+.control-group h4,
+label {
     color: #a0c8ff;
     font-size: 13px;
     font-weight: 500;
@@ -105,13 +147,14 @@ button:disabled {
 }
 
 .radio-label {
+
     display: flex;
     align-items: center;
     gap: 8px;
     cursor: pointer;
     padding: 8px 12px;
     border-radius: 6px;
-    background: rgba(255, 255, 255, 0.03);
+    background: rgba(0, 0, 0, 0.03);
     transition: all 0.2s;
 }
 
@@ -119,12 +162,19 @@ button:disabled {
     background: rgba(255, 255, 255, 0.05);
 }
 
+.radio-label.info {
+    font-size: 1.4rem;
+    background: rgba(33, 150, 243, 0.15);
+    color: bisque;
+    border: 1px solid #c7c7c7;
+}
+
 .radio-label.active {
     background: rgba(33, 150, 243, 0.15);
     border: 1px solid #2196f3;
 }
 
-.radio-label input {
+s .radio-label input {
     display: none;
 }
 

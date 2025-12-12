@@ -2,13 +2,17 @@
     <div id="app" class="app-root">
         <div class="container">
 
+            <StartScreen v-if="turn === 0" :ratio="ratio" @start="turn = turn + 1" />
+            <template v-else>
+                <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine" :fuel="fuel"
+                    :turn="turn"  />
+                <Controls v-model:thrust="thrust" v-model:engine="activeEngine" :disabled="gameOver" @step="onStep"
+                    @reset="resetGame" />
+            </template>
 
-            <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine" :fuel="fuel" />
 
-            <Hud :altitude="altitude" :velocity="velocity" :fuel="fuel" :turn="turn" />
 
-            <Controls v-model:thrust="thrust" v-model:engine="activeEngine" :disabled="gameOver" @step="onStep"
-                @reset="resetGame" />
+
 
             <AudioManager :thrust="thrust" :engine="activeEngine" :altitude="altitude" :velocity="velocity" :fuel="fuel"
                 :gameOver="gameOver" :message="message" :isLanded="isLanded" ref="audioManager" />
@@ -24,12 +28,27 @@
 </template>
 
 <script setup>
-import { ref, computed, watch, onMounted } from 'vue'
+import { ref, computed, watch, onMounted, onBeforeUnmount } from 'vue'
 import { usePhysics } from './composables/usePhysics'
-import Hud from './components/Hud.vue'
+
+import StartScreen from './components/StartScreen.vue'
 import Controls from './components/Controls.vue'
 import Renderer from './components/Renderer.vue'
 import AudioManager from './components/AudioManager.vue'
+
+
+const ratio = ref('')
+const updateRatio = () => {
+    const wh = window.innerWidth / window.innerHeight
+    ratio.value = wh > 1.7 ? '169' : wh > 1.45 ? '43' : '916'
+}
+updateRatio()
+onMounted(() => {
+    window.addEventListener('resize', updateRatio)
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', updateRatio)
+})
 
 const maxAltitude = 1200
 const { altitude, velocity, fuel, step: physicsStep, reset, getState, soundEvents, isEngineActive, hasFuel } = usePhysics({
@@ -48,6 +67,10 @@ const activeEngine = ref('retro')
 const turn = ref(0)
 const message = ref('')
 const gameOver = ref(false)
+
+
+
+
 
 // Добавляем ref для AudioManager
 // Добавляем ref для AudioManager
@@ -222,9 +245,10 @@ function resetGame() {
 
 <style scoped>
 .container {
-    max-width: 1100px;
-    margin: 12px auto;
-    padding: 8px;
+    height: 100vh;
+    /* max-width: 1100px; */
+    /* margin: 12px auto; */
+    /* padding: 8px; */
 }
 
 .message {
@@ -254,6 +278,8 @@ function resetGame() {
     background: linear-gradient(#020516, #04102a);
     min-height: 100vh;
     padding: 20px;
+    position: relative;
+
 }
 
 

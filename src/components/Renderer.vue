@@ -1,6 +1,6 @@
 <template>
     <div class="viewport" :class="viewportClass">
-        <template v-if="fuel && altitude > 0 && altitude !== 1200">
+        <template v-if="fuel && altitude > 0">
             <svg class="background" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid slice"
                 xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -56,20 +56,20 @@
                     </g>
                 </svg>
             </div>
-        </template>
-        <template v-if="altitude == 1200">
-            <img :src="startMoon" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+
         </template>
         <template v-if="fuel == 0">
-            <img :src="fuelEmty" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+            <img :src="fuelEmty" class="full-img" :style="surfaceImageStyle" />
         </template>
-        <template v-if="altitude <= 0 && velocity < 5">
-            <img :src="success_landing" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+        <template v-else-if="altitude <= 0 && velocity < 5">
+            <img :src="success_landing" class="full-img" :style="surfaceImageStyle" />
         </template>
         <template v-else>
-            <img :src="crash_landing" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+            <img :src="crash_landing" class="full-img" :style="surfaceImageStyle" />
         </template>
-
+        <template v-if="fuel && altitude > 0">
+            <Hud :altitude="altitude" :velocity="velocity" :fuel="fuel" :turn="turn" />
+        </template>
     </div>
 </template>
 
@@ -77,8 +77,10 @@
 //main  * (1 + thrust * 0.3)
 //Retro * (1 + thrust * 0.2)
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import Hud from './Hud.vue'
 
 const ratio = ref(window.innerWidth / window.innerHeight)
+
 const updateRatio = () => {
     ratio.value = window.innerWidth / window.innerHeight
 }
@@ -90,18 +92,11 @@ onBeforeUnmount(() => {
 })
 
 const viewportClass = computed(() => {
-  if (ratio.value > 1.7) return 'ratio-169'
-  if (ratio.value > 1.45) return 'ratio-43'
-  return 'ratio-916'
+    if (ratio.value > 1.7) return 'ratio-169'
+    if (ratio.value > 1.45) return 'ratio-43'
+    return 'ratio-916'
 })
 
-const startMoon = computed(() =>
-    ratio.value > 1.7
-        ? '/start-moon169.jpg'
-        : ratio.value > 1.45
-            ? '/start-moon43.jpg'
-            : '/start-moon916.jpg'
-)
 
 const moonSurfaceImage = '/moon-surface.png'
 const fuelEmty = '/fuel-empty.png'
@@ -120,7 +115,8 @@ const props = defineProps({
     thrust: Number,
     engine: String,
     maxAltitude: { type: Number, default: 1200 },
-    fuel: Number
+    fuel: Number,
+    turn: Number,
 })
 
 const flameStyle = computed(() => ({
@@ -249,7 +245,7 @@ const shipStyle = computed(() => {
 
     /* <-- гарантирует точное соотношение сторон */
 
-    margin-top: 12px;
+    /* margin-top: 12px; */
     overflow: hidden;
     border-radius: 10px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
@@ -257,9 +253,17 @@ const shipStyle = computed(() => {
 
 }
 
-.ratio-916 { aspect-ratio: 9 / 16; }
-.ratio-169 { aspect-ratio: 16 / 9; }
-.ratio-43  { aspect-ratio: 4 / 3; }
+.ratio-916 {
+    aspect-ratio: 9 / 16;
+}
+
+.ratio-169 {
+    aspect-ratio: 16 / 9;
+}
+
+.ratio-43 {
+    aspect-ratio: 4 / 3;
+}
 
 .background {
     position: absolute;

@@ -3,13 +3,13 @@
         <div class="hud">
             <div class="hud-container">
                 <div class="stat"><label>Высота</label>
-                    <div>{{ altitudeDisplay }}</div>
+                    <div class="stat-info">{{ altitudeDisplay }}</div>
                 </div>
                 <div class="stat"><label>Ускорение</label>
-                    <div>{{ velocityDisplay }}</div>
+                    <div class="stat-info">{{ velocityDisplay }}</div>
                 </div>
                 <div class="stat"><label>Топливо</label>
-                    <div>{{ fuelDisplay }}</div>
+                    <div class="stat-info">{{ fuelDisplay }}</div>
                 </div>
                 <div class="stat"><label>Уровень</label>
                     <div>{{ turn }}</div>
@@ -56,10 +56,10 @@ const fuelDisplay = computed(() => `${Math.max(0, fuel.value).toFixed(1)} kg`)
     transition: background-color 0.2s;
 }
 
-.stat:hover {
-    background: rgba(255, 255, 255, 0.05);
+.stat-info{
+    font-size: 1.2rem;
+    color: #fdd290;
 }
-
 label {
     color: #a0c8ff;
     font-size: 12px;
