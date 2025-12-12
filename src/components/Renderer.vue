@@ -1,6 +1,6 @@
 <template>
-    <div class="viewport">
-        <template v-if="fuel && altitude > 0 && altitude !== 1200 ">
+    <div class="viewport" :class="viewportClass">
+        <template v-if="fuel && altitude > 0 && altitude !== 1200">
             <svg class="background" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid slice"
                 xmlns="http://www.w3.org/2000/svg">
                 <defs>
@@ -57,18 +57,18 @@
                 </svg>
             </div>
         </template>
-       <template v-if="altitude == 1200">
-             <img :src="startMoon" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
-       </template>
+        <template v-if="altitude == 1200">
+            <img :src="startMoon" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+        </template>
         <template v-if="fuel == 0">
-             <img :src="fuelEmty" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
-       </template>
-       <template v-if="altitude <= 0 && velocity < 5">
-             <img :src="success_landing" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
-       </template>
-       <template v-else>
-             <img :src="crash_landing" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
-       </template>
+            <img :src="fuelEmty" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+        </template>
+        <template v-if="altitude <= 0 && velocity < 5">
+            <img :src="success_landing" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+        </template>
+        <template v-else>
+            <img :src="crash_landing" alt="Moon surface" class="full-img" :style="surfaceImageStyle" />
+        </template>
 
     </div>
 </template>
@@ -76,12 +76,36 @@
 <script setup>
 //main  * (1 + thrust * 0.3)
 //Retro * (1 + thrust * 0.2)
-import { computed } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 
-const startMoon = '/start-moon169.jpg'
+const ratio = ref(window.innerWidth / window.innerHeight)
+const updateRatio = () => {
+    ratio.value = window.innerWidth / window.innerHeight
+}
+onMounted(() => {
+    window.addEventListener('resize', updateRatio)
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('resize', updateRatio)
+})
+
+const viewportClass = computed(() => {
+  if (ratio.value > 1.7) return 'ratio-169'
+  if (ratio.value > 1.45) return 'ratio-43'
+  return 'ratio-916'
+})
+
+const startMoon = computed(() =>
+    ratio.value > 1.7
+        ? '/start-moon169.jpg'
+        : ratio.value > 1.45
+            ? '/start-moon43.jpg'
+            : '/start-moon916.jpg'
+)
+
 const moonSurfaceImage = '/moon-surface.png'
 const fuelEmty = '/fuel-empty.png'
-const success_landing='/success-landing.png'
+const success_landing = '/success-landing.png'
 const crash_landing = '/crash-landing.png'
 
 import flameImage from '/flame.png' // или flame.webp
@@ -209,17 +233,33 @@ const shipStyle = computed(() => {
 
 <style scoped>
 .viewport {
-    position: relative;
+    /* position: relative;
     width: 100%;
     height: 650px;
-    /** 650 */
     max-width: 1100px;
     margin-top: 12px;
     overflow: hidden;
     border-radius: 10px;
     box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    background: linear-gradient(180deg, #020516, #04102a); */
+
+    position: relative;
+    width: 100%;
+    max-width: 1100px;
+
+    /* <-- гарантирует точное соотношение сторон */
+
+    margin-top: 12px;
+    overflow: hidden;
+    border-radius: 10px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
     background: linear-gradient(180deg, #020516, #04102a);
+
 }
+
+.ratio-916 { aspect-ratio: 9 / 16; }
+.ratio-169 { aspect-ratio: 16 / 9; }
+.ratio-43  { aspect-ratio: 4 / 3; }
 
 .background {
     position: absolute;
@@ -247,10 +287,11 @@ const shipStyle = computed(() => {
 }
 
 .full-img {
-height: 100%;
+    height: 100%;
 
 
 }
+
 /* Картинка поверхности - изначально скрыта снизу */
 .surface-img {
     position: absolute;
