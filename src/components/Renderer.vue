@@ -241,14 +241,14 @@ const shipStyle = computed(() => {
 
     position: relative;
     width: 100%;
-    max-width: 1100px;
+    /* max-width: 1100px; */
 
     /* <-- гарантирует точное соотношение сторон */
 
     /* margin-top: 12px; */
     overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
+    /* border-radius: 10px; */
+    /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6); */
     background: linear-gradient(180deg, #020516, #04102a);
 
 }
@@ -292,8 +292,6 @@ const shipStyle = computed(() => {
 
 .full-img {
     height: 100%;
-
-
 }
 
 /* Картинка поверхности - изначально скрыта снизу */

@@ -22,7 +22,7 @@
                 <pre>{{ debugInfo }}</pre>
             </div> -->
 
-            <div class="message" v-if="message">{{ message }}</div>
+            <!-- <div class="message" v-if="message">{{ message }}</div> -->
         </div>
     </div>
 </template>
@@ -246,12 +246,10 @@ function resetGame() {
 <style scoped>
 .container {
     height: 100vh;
-    /* max-width: 1100px; */
-    /* margin: 12px auto; */
-    /* padding: 8px; */
 }
 
 .message {
+    position: absolute;
     margin-top: 12px;
     color: #ffd;
     font-weight: 600;
@@ -263,6 +261,7 @@ function resetGame() {
 }
 
 .debug {
+    position: absolute;
     margin-top: 20px;
     padding: 10px;
     background: rgba(0, 0, 0, 0.7);
@@ -286,7 +285,7 @@ function resetGame() {
 /* ===== АДАПТИВНОСТЬ ===== */
 
 /* Планшеты (768px - 1024px) */
-@media (max-width: 1024px) {
+/* @media (max-width: 1024px) {
     .app-root {
         padding: 8px;
     }
@@ -304,11 +303,11 @@ function resetGame() {
     .game-scene {
         margin-top: 60px;
     }
-}
+} */
 
 /* Мобильные устройства (до 768px) */
 @media (max-width: 768px) {
-    .app-root {
+    /* .app-root {
         padding: 5px;
     }
 
@@ -316,10 +315,10 @@ function resetGame() {
         display: flex;
         flex-direction: column;
         min-height: auto;
-    }
+    } */
 
     /* Перемещаем HUD и Controls в один ряд сверху */
-    .hud-overlay,
+    /* .hud-overlay,
     .controls-overlay {
         position: static;
         width: 100%;
@@ -339,19 +338,18 @@ function resetGame() {
         margin-top: 0;
         width: 100%;
         height: 400px;
-        /* Фиксированная высота на мобильных */
-    }
+    } */
 
-    .message {
+    /* .message {
         bottom: 10px;
         padding: 10px 20px;
         font-size: 14px;
-    }
+    } */
 }
 
 /* Маленькие мобильные (до 480px) */
 @media (max-width: 480px) {
-    .app-root {
+    /* .app-root {
         padding: 3px;
     }
 
@@ -377,6 +375,6 @@ function resetGame() {
 
     .hud-overlay .value {
         font-size: 16px;
-    }
+    } */
 }
 </style>

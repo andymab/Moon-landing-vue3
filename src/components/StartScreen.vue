@@ -144,13 +144,7 @@ function startGame() { emit('start') }
     position: relative;
     height: 100%;
     width: 100%;
-
-
-    /* <-- гарантирует точное соотношение сторон */
-
-    /* margin-top: 12px; */
     overflow: hidden;
-
 }
 
 .full-img {

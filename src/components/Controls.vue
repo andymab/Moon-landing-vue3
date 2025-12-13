@@ -58,9 +58,10 @@
             <input type="range" min="0" max="100" v-model.number="thrustLocal" />
         </div>
 
-        <div class="control-row buttons" style="margin-top: 1rem;">
-            <button @click="emitStep" :disabled="disabled">Применить (1s)</button>
-            <button @click="emitReset">Сбросить</button>
+        <div class="control-row buttons" >
+            <button @click="emitReset" class="btn-contol">Сбросить</button>
+            <button @click="emitStep" class="btn-contol" :disabled="disabled">Применить (1s)</button>
+            
         </div>
     </div>
 </template>
@@ -84,7 +85,8 @@ function emitReset() { emit('reset') }
 .controls {
     position: absolute;
     bottom: 0;
-    z-index: 10;
+    z-index: 2;
+    width: 100%;
 
 
     display: flex;
@@ -93,8 +95,6 @@ function emitReset() { emit('reset') }
     align-items: center;
     padding: 10px;
     background-color: #020516;
-    /* background: rgba(255, 255, 255, 0.03); */
-    /* border-radius: 8px; */
 }
 
 .control-row {
@@ -119,7 +119,9 @@ button {
     color: #fff;
     border: none
 }
-
+.btn-contol{
+    font-size: 1.4rem;
+}
 button:disabled {
     opacity: 0.5
 }
@@ -193,5 +195,27 @@ s .radio-label input {
 .radio-text {
     color: #fff;
     font-size: 14px;
+}
+
+@media (min-width: 1024px) {
+    .controls {
+        padding: 40px;
+        justify-content: center;
+        flex-direction: row;
+    }
+
+    /** Двигатель */
+    .control-group {
+        align-items: center;
+        justify-content: flex-start;
+        gap: 26px;
+        width: auto;
+    }
+
+    .control-row {
+        width: auto;
+        margin-left: 4rem;
+    }
+
 }
 </style>

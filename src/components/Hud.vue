@@ -97,4 +97,11 @@ label {
     /* Turn */
     color: #ba68c8;
 }
+
+@media (min-width: 1024px) {
+    .hud {
+        padding: 40px;
+    }
+
+}
 </style>
