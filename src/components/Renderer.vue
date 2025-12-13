@@ -74,8 +74,6 @@
 </template>
 
 <script setup>
-//main  * (1 + thrust * 0.3)
-//Retro * (1 + thrust * 0.2)
 import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
 import Hud from './Hud.vue'
 
@@ -142,8 +140,9 @@ const sunY = 140
 const viewportH = 650 // высота viewport
 
 // Параметры поверхности
-const CONTAINER_HEIGHT_PERCENT = 40 // 40% от высоты viewport
-const CONTAINER_HEIGHT = viewportH * (CONTAINER_HEIGHT_PERCENT / 100) // 305px при viewportH=764
+
+const CONTAINER_HEIGHT_PERCENT = viewportClass.value === 'ratio-916' ? 40 : 16 // 40% от высоты viewport
+const CONTAINER_HEIGHT = viewportH * (CONTAINER_HEIGHT_PERCENT / 100) 
 
 // Вычисляем положение верхней границы поверхности (surfaceY)
 const surfaceY = computed(() => {
