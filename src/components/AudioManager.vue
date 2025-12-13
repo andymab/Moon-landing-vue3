@@ -46,6 +46,9 @@ const landingBuffer = ref(null)
 const crashBuffer = ref(null)
 const crashHorrorBuffer = ref(null)
 
+const successBuffer = ref(null)
+
+
 
 const buttonSoundBuffer = ref(null)
 const buttonAudio = ref(null)
@@ -87,8 +90,10 @@ async function initAudio() {
             }),
             loadAudioFile('/sounds/landing.wav').then(buffer => {
                 landingBuffer.value = buffer
-            })
-            
+            }),
+            loadAudioFile('/sounds/mixkit-small-group-cheer-and-applause-518.wav').then(buffer => {
+                successBuffer.value = buffer
+            })            
         ])
 
         console.log('Audio initialized successfully')
@@ -250,7 +255,7 @@ function playLandingSound() {
         // Останавливаем звук двигателя при приземлении
         stopEngineSound()
 
-        // 1. Первый звук - crash.wav
+    
         const landingSource = audioContext.value.createBufferSource()
         landingSource.buffer = landingBuffer.value
 
@@ -268,31 +273,31 @@ function playLandingSound() {
         const firstSoundDuration = landingBuffer.value.duration
 
         // 2. Второй звук - crash-horror.wav запускаем после окончания первого
-        // landingSource.onended = () => {
-        //     console.log('First crash sound ended, starting horror sound')
+        landingSource.onended = () => {
+             console.log('First  landing sound ended, starting applause sound')
 
-        //     const successLandingSource = audioContext.value.createBufferSource()
-        //     successLandingSource.buffer = successLandingBuffer.value
+             const successLandingSource = audioContext.value.createBufferSource()
+             successLandingSource.buffer = successBuffer.value
 
-        //     const successGain = audioContext.value.createGain()
-        //     successGain.gain.value = 0.7 // Громкость 70%
+             const successGain = audioContext.value.createGain()
+             successGain.gain.value = 0.7 // Громкость 70%
 
-        //     successLandingSource.connect(successGain)
-        //     successGain.connect(audioContext.value.destination)
+             successLandingSource.connect(successGain)
+             successGain.connect(audioContext.value.destination)
 
-        //     // Небольшая пауза между звуками (0.3 секунды)
-        //     setTimeout(() => {
-        //         successLandingSource.start(0)
-        //         console.log('Horror crash sound started')
+             // Небольшая пауза между звуками (0.3 секунды)
+             setTimeout(() => {
+                 successLandingSource.start(0)
+                 console.log('applause sound started')
 
-        //         successLandingSource.onended = () => {
-        //             console.log('Crash sound sequence completed')
-        //         }
-        //     }, 300)
-        // }
+                 successLandingSource.onended = () => {
+                     console.log('successLandingSource sound sequence completed')
+                 }
+             }, 300)
+         }
 
     } catch (error) {
-        console.error('Failed to play crash sound:', error)
+        console.error('Failed to play successLandingSource sound:', error)
     }
 
 
