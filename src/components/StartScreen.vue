@@ -202,11 +202,10 @@ function startGame() { emit('start') }
 
 .btn-start,
 .btn-help {
-    font-size: 1.2rem;
+    font-size: 1rem;
     margin-right: 1rem;
-    line-height: 1.45;
+    /* line-height: 1.45; */
     cursor: pointer;
-    padding: 8px 12px;
     text-transform: uppercase;
     /* padding: 4px; */
 }
