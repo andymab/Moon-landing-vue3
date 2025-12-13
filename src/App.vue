@@ -189,7 +189,7 @@ function onStep() {
             message.value = 'Топливо закончилось! Вы больше не можете использовать тягу.'
             console.log('OUT OF FUEL')
             setTimeout(() => {
-                audioManager.value.stopEngineSound()
+                audioManager.value.playFuelEmptySound()
             }, 300)
         } else {
             message.value = ''
@@ -257,7 +257,11 @@ function resetGame() {
     height: 100%;
     display: flex;
     justify-content: center;
-    align-items: center;
+    /* align-items: center; */
+
+      align-items: flex-start;
+      padding-top: 20%;
+
     pointer-events: none;
     /* чтобы не блокировал клики по фону */
 }

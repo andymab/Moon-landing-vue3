@@ -45,6 +45,7 @@ const fuelWarningBuffer = ref(null)
 const landingBuffer = ref(null)
 const crashBuffer = ref(null)
 const crashHorrorBuffer = ref(null)
+const fuelEmptyBuffer = ref(null)
 
 const successBuffer = ref(null)
 
@@ -88,6 +89,9 @@ async function initAudio() {
             loadAudioFile('/sounds/crash-horror.wav').then(buffer => {
                 crashHorrorBuffer.value = buffer
             }),
+            loadAudioFile('/sounds/mixkit-crowd-disappointment-long-boo-463.wav').then(buffer => {
+                fuelEmptyBuffer.value = buffer
+            }),            
             loadAudioFile('/sounds/landing.wav').then(buffer => {
                 landingBuffer.value = buffer
             }),
@@ -240,6 +244,68 @@ function playVoiceMessage(message) {
     } else if (message.includes('Out of fuel')) {
         playFuelWarning()
     }
+}
+
+//Звук пустого бака с топливом
+function playFuelEmptySound(){
+
+    console.log('Playing FuelEmpty sound')
+    // Здесь будет логика воспроизведения звука посадки
+  if (!audioContext.value ) {
+        console.warn('Crash sounds not loaded')
+        return
+    }
+
+    try {
+        // Останавливаем звук двигателя при приземлении
+        stopEngineSound()
+
+    
+        const fuelEmptySource = audioContext.value.createBufferSource()
+        fuelEmptySource.buffer = fuelEmptyBuffer.value
+
+        const fuelEmptyGain = audioContext.value.createGain()
+        fuelEmptyGain.gain.value = 0.6 // Громкость 60%
+
+        fuelEmptySource.connect(fuelEmptyGain)
+        fuelEmptyGain.connect(audioContext.value.destination)
+
+        // Запускаем первый звук
+        fuelEmptySource.start(0)
+        console.log('First fuelEmptySource sound started')
+
+
+
+        // // 2. Второй звук - crash-horror.wav запускаем после окончания первого
+        // fuelEmptySource.onended = () => {
+        //      console.log('First  landing sound ended, starting applause sound')
+
+        //      const successLandingSource = audioContext.value.createBufferSource()
+        //      successLandingSource.buffer = successBuffer.value
+
+        //      const successGain = audioContext.value.createGain()
+        //      successGain.gain.value = 0.7 // Громкость 70%
+
+        //      successLandingSource.connect(successGain)
+        //      successGain.connect(audioContext.value.destination)
+
+        //      // Небольшая пауза между звуками (0.3 секунды)
+        //      setTimeout(() => {
+        //          successLandingSource.start(0)
+        //          console.log('applause sound started')
+
+        //          successLandingSource.onended = () => {
+        //              console.log('successLandingSource sound sequence completed')
+        //          }
+        //      }, 300)
+        //  }
+
+    } catch (error) {
+        console.error('Failed to play successLandingSource sound:', error)
+    }
+
+
+
 }
 
 // Звук посадки
@@ -513,6 +579,7 @@ defineExpose({
     playCrashSound,
     playLandingSound,
     stopEngineSound,
+    playFuelEmptySound,
     // при необходимости можно добавить другие методы
 })
 </script>
