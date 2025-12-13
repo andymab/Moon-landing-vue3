@@ -276,10 +276,9 @@ function resetGame() {
 
 .app-root {
     background: linear-gradient(#020516, #04102a);
-    min-height: 100vh;
-    padding: 20px;
+    height: 100vh;
+    overflow: hidden;
     position: relative;
-
 }
 
 
