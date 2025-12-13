@@ -100,6 +100,7 @@ function emitReset() { emit('reset') }
 
 .control-row {
     display: flex;
+    justify-content: space-between;
     align-items: center;
     gap: 8px;
     width: 100%;

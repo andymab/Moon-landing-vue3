@@ -188,6 +188,7 @@ function startGame() { emit('start') }
     position: absolute;
     bottom: 10px;
     padding: 16px;
+    display:flex;
 }
 
 .align-center {
