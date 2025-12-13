@@ -1,6 +1,6 @@
 <template>
     <div class="start-screen">
-        <img :src="startMoon" alt="Moon surface" class="full-img"  />
+        <img :src="startMoon" alt="Moon surface" class="full-img " :class="`aspect-${sufixRatio}`" />
 
         <div class="title-game">
             <h1>Лунная посадка</h1>
@@ -118,16 +118,13 @@
 import { ref, computed, toRef } from 'vue'
 
 const props = defineProps({
-    ratio: {
-        type: String,
-        default: '916'
-    }
+    sufixRatio: { type: String }
 })
 
-const ratio = toRef(props, 'ratio')
+const sufixRatio = toRef(props, 'sufixRatio')
 
 const startMoon = computed(() =>
-    `/start-moon${ratio.value}.jpg`
+    `/start-moon${sufixRatio.value}.jpg`
 )
 
 
@@ -148,8 +145,15 @@ function startGame() { emit('start') }
 }
 
 .full-img {
-    height: 100%;
+    height: auto;
+    width: 100%;
 }
+
+.full-img.aspect-916 {
+    height: 100%;
+    width: auto;
+}
+
 
 .close {
     color: aliceblue;
@@ -202,6 +206,20 @@ function startGame() { emit('start') }
     margin-right: 1rem;
     line-height: 1.45;
     cursor: pointer;
+    padding: 8px 12px;
+    text-transform: uppercase;
     /* padding: 4px; */
+}
+
+.buttons button {
+    margin-right: 8px
+}
+
+button {
+    padding: 8px 12px;
+    border-radius: 8px;
+    background: rgba(31, 20, 6, 0.831);
+    color: #fff;
+    border: none
 }
 </style>

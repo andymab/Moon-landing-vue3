@@ -74,8 +74,21 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted, onBeforeUnmount } from 'vue'
+import { computed, ref, onMounted, onBeforeUnmount, toRef } from 'vue'
 import Hud from './Hud.vue'
+
+
+const props = defineProps({
+    altitude: Number,
+    velocity: Number,
+    thrust: Number,
+    engine: String,
+    maxAltitude: { type: Number, default: 1200 },
+    fuel: Number,
+    turn: Number,
+    sufixRatio: { type: String }
+})
+
 
 const ratio = ref(window.innerWidth / window.innerHeight)
 
@@ -96,26 +109,24 @@ const viewportClass = computed(() => {
 })
 
 
+const sufixRatio = toRef(props, 'sufixRatio')
+
 const moonSurfaceImage = '/moon-surface.png'
-const fuelEmty = '/fuel-empty.png'
-const success_landing = '/success-landing.png'
-const crash_landing = '/crash-landing.png'
+const fuelEmty = computed(() =>
+    `/fuel-empty${sufixRatio.value}.jpg`
+)
+
+const success_landing = computed(() =>
+    `/success-landing${sufixRatio.value}.jpg`
+)
+
+const crash_landing = computed(() =>
+    `/crash-landing${sufixRatio.value}.jpg`
+)
 
 import flameImage from '/flame.png' // или flame.webp
 import retroFlameImage from '/flame-retro.png'
 
-
-
-
-const props = defineProps({
-    altitude: Number,
-    velocity: Number,
-    thrust: Number,
-    engine: String,
-    maxAltitude: { type: Number, default: 1200 },
-    fuel: Number,
-    turn: Number,
-})
 
 const flameStyle = computed(() => ({
     width: '100%',

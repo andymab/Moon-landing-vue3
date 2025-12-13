@@ -13,7 +13,7 @@
                     <!-- <span class="radio-dot"></span> -->
                     <svg class="thrust-icon" viewBox="0 0 24 24" width="48" height="48"
                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
-                        <title>Thrust Up</title>
+                        <title>Маршевый двигатель</title>
                         <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
                             stroke-linejoin="round">
                             <!-- arrow shaft -->
@@ -33,7 +33,7 @@
                     <input type="radio" v-model="engineLocal" value="main" />
                     <svg class="thrust-icon" viewBox="0 0 24 24" width="48" height="48"
                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
-                        <title>Thrust Down</title>
+                        <title>Посадочный двигатель</title>
                         <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
                             stroke-linejoin="round">
                             <!-- arrow shaft -->
@@ -59,8 +59,9 @@
         </div>
 
         <div class="control-row buttons" >
-            <button @click="emitReset" class="btn-contol">Сбросить</button>
+           
             <button @click="emitStep" class="btn-contol" :disabled="disabled">Применить (1s)</button>
+            <button @click="emitReset" class="btn-contol">Сбросить</button> 
             
         </div>
     </div>

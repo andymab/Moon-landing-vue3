@@ -2,10 +2,10 @@
     <div id="app" class="app-root">
         <div class="container">
 
-            <StartScreen v-if="turn === 0" :ratio="ratio" @start="turn = turn + 1" />
+            <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" />
             <template v-else>
                 <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine" :fuel="fuel"
-                    :turn="turn"  />
+                    :turn="turn" :sufix-ratio="ratio" />
                 <Controls v-model:thrust="thrust" v-model:engine="activeEngine" :disabled="gameOver" @step="onStep"
                     @reset="resetGame" />
             </template>
@@ -21,8 +21,9 @@
             <div class="debug" v-if="debugInfo">
                 <pre>{{ debugInfo }}</pre>
             </div> -->
-
-            <!-- <div class="message" v-if="message">{{ message }}</div> -->
+            <div v-if="message" class="message-container">
+                <div class="message">{{ message }}</div>
+            </div>
         </div>
     </div>
 </template>
@@ -248,16 +249,36 @@ function resetGame() {
     height: 100vh;
 }
 
+.message-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    /* чтобы не блокировал клики по фону */
+}
+
+
 .message {
-    position: absolute;
-    margin-top: 12px;
+    max-width: 80%;
+    /* ограничение ширины */
+    margin: 12px;
     color: #ffd;
     font-weight: 600;
     font-size: 18px;
     text-align: center;
-    padding: 10px;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 5px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.7);
+    border-radius: 10px;
+    backdrop-filter: blur(5px);
+    /* эффект размытия фона */
+    pointer-events: auto;
+    /* включаем клики на самом сообщении */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
 }
 
 .debug {
