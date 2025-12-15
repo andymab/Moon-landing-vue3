@@ -246,16 +246,36 @@ function resetGame() {
 
 <style scoped>
 .container {
-  /* Вместо height: 100vh используем: */
   height: 100%;
-  min-height: 100vh; /* Фолбэк */
-  min-height: -webkit-fill-available; /* Для iOS */
+  min-height: 100vh;
+  min-height: -webkit-fill-available; /* Критически важно для iOS */
+  min-height: 100dvh; /* Новый стандарт */
   width: 100%;
   position: relative;
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
+.app-root {
+  background: linear-gradient(#020516, #04102a);
+  height: 100%;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  min-height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
 
+/* Для iOS с dynamic island/челкой */
+@supports (padding: max(0px)) {
+  .container {
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+  }
+}
 
 
 .message-container {
@@ -272,14 +292,6 @@ function resetGame() {
   z-index: 1000;
 }
 
-.app-root {
-  background: linear-gradient(#020516, #04102a);
-  height: 100%;
-  min-height: 100vh;
-  min-height: -webkit-fill-available;
-  overflow: hidden;
-  position: relative;
-}
 
 .message {
     max-width: 80%;
@@ -318,6 +330,7 @@ function resetGame() {
   .container {
     height: 100%;
     min-height: -webkit-fill-available;
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
   }
   
   .message {
@@ -328,7 +341,7 @@ function resetGame() {
   }
   
   .message-container {
-    padding-top: 15%;
+    padding-top: calc(15% + env(safe-area-inset-top, 0px));
   }
 }
 
