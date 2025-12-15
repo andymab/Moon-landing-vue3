@@ -246,26 +246,40 @@ function resetGame() {
 
 <style scoped>
 .container {
-    height: 100vh;
+  /* Вместо height: 100vh используем: */
+  height: 100%;
+  min-height: 100vh; /* Фолбэк */
+  min-height: -webkit-fill-available; /* Для iOS */
+  width: 100%;
+  position: relative;
+  overflow: hidden;
 }
+
+
+
 
 .message-container {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: flex;
-    justify-content: center;
-    /* align-items: center; */
-
-      align-items: flex-start;
-      padding-top: 20%;
-
-    pointer-events: none;
-    /* чтобы не блокировал клики по фону */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 20%;
+  pointer-events: none;
+  z-index: 1000;
 }
 
+.app-root {
+  background: linear-gradient(#020516, #04102a);
+  height: 100%;
+  min-height: 100vh;
+  min-height: -webkit-fill-available;
+  overflow: hidden;
+  position: relative;
+}
 
 .message {
     max-width: 80%;
@@ -298,108 +312,34 @@ function resetGame() {
     overflow: auto;
 }
 
-.app-root {
-    background: linear-gradient(#020516, #04102a);
-    height: 100vh;
-    overflow: hidden;
-    position: relative;
-}
 
-
-
-/* ===== АДАПТИВНОСТЬ ===== */
-
-/* Планшеты (768px - 1024px) */
-/* @media (max-width: 1024px) {
-    .app-root {
-        padding: 8px;
-    }
-
-    .hud-overlay {
-        top: 15px;
-        left: 15px;
-    }
-
-    .controls-overlay {
-        top: 15px;
-        right: 15px;
-    }
-
-    .game-scene {
-        margin-top: 60px;
-    }
-} */
-
-/* Мобильные устройства (до 768px) */
+/* Адаптивность для мобильных */
 @media (max-width: 768px) {
-    /* .app-root {
-        padding: 5px;
-    }
-
-    .container {
-        display: flex;
-        flex-direction: column;
-        min-height: auto;
-    } */
-
-    /* Перемещаем HUD и Controls в один ряд сверху */
-    /* .hud-overlay,
-    .controls-overlay {
-        position: static;
-        width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .hud-overlay {
-        order: 1;
-    }
-
-    .controls-overlay {
-        order: 2;
-    }
-
-    .game-scene {
-        order: 3;
-        margin-top: 0;
-        width: 100%;
-        height: 400px;
-    } */
-
-    /* .message {
-        bottom: 10px;
-        padding: 10px 20px;
-        font-size: 14px;
-    } */
+  .container {
+    height: 100%;
+    min-height: -webkit-fill-available;
+  }
+  
+  .message {
+    font-size: 16px;
+    padding: 15px;
+    margin: 10px;
+    max-width: 90%;
+  }
+  
+  .message-container {
+    padding-top: 15%;
+  }
 }
 
-/* Маленькие мобильные (до 480px) */
 @media (max-width: 480px) {
-    /* .app-root {
-        padding: 3px;
-    }
-
-    .game-scene {
-        height: 300px;
-    }
-
-    .hud-overlay .hud-container {
-        flex-direction: row;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 8px;
-    }
-
-    .hud-overlay .stat {
-        min-width: 80px;
-        padding: 6px 8px;
-    }
-
-    .hud-overlay label {
-        font-size: 10px;
-    }
-
-    .hud-overlay .value {
-        font-size: 16px;
-    } */
+  .message {
+    font-size: 14px;
+    padding: 12px;
+  }
+  
+  .message-container {
+    padding-top: 20%;
+  }
 }
 </style>

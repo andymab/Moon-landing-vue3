@@ -138,20 +138,32 @@ function startGame() { emit('start') }
 </script>
 <style scoped>
 .start-screen {
-    position: relative;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #020516, #04102a);
+}
+
+@media (max-width: 768px) {
+  .start-screen {
     height: 100%;
-    width: 100%;
-    overflow: hidden;
+    max-height: calc(100vh - env(safe-area-inset-bottom, 0px));
+  }
+  
 }
 
 .full-img {
-    height: auto;
-    width: 100%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .full-img.aspect-916 {
     height: 100%;
     width: auto;
+    max-height: calc(100vh - env(safe-area-inset-bottom, 0px));
 }
 
 

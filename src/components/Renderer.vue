@@ -152,7 +152,13 @@ const viewportH = 650 // высота viewport
 
 // Параметры поверхности
 
-const CONTAINER_HEIGHT_PERCENT = viewportClass.value === 'ratio-916' ? 40 : 16 // 40% от высоты viewport
+//const CONTAINER_HEIGHT_PERCENT = viewportClass.value === 'ratio-916' ? 40 : 16 // 40% от высоты viewport
+const CONTAINER_HEIGHT_PERCENT = computed(() => {
+  if (window.innerWidth <= 768) {
+    return viewportClass.value === 'ratio-916' ? 35 : 14;
+  }
+  return viewportClass.value === 'ratio-916' ? 40 : 16;
+});
 const CONTAINER_HEIGHT = viewportH * (CONTAINER_HEIGHT_PERCENT / 100) 
 
 // Вычисляем положение верхней границы поверхности (surfaceY)
@@ -239,102 +245,17 @@ const shipStyle = computed(() => {
 
 <style scoped>
 .viewport {
-    /* position: relative;
-    width: 100%;
-    height: 650px;
-    max-width: 1100px;
-    margin-top: 12px;
-    overflow: hidden;
-    border-radius: 10px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6);
-    background: linear-gradient(180deg, #020516, #04102a); */
-
-    position: relative;
-    width: 100%;
-    /* max-width: 1100px; */
-
-    /* <-- гарантирует точное соотношение сторон */
-
-    /* margin-top: 12px; */
-    overflow: hidden;
-    /* border-radius: 10px; */
-    /* box-shadow: 0 8px 30px rgba(0, 0, 0, 0.6); */
-    background: linear-gradient(180deg, #020516, #04102a);
-
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #020516, #04102a);
 }
 
-.ratio-916 {
-    aspect-ratio: 9 / 16;
-}
 
-.ratio-169 {
-    aspect-ratio: 16 / 9;
-}
 
-.ratio-43 {
-    aspect-ratio: 4 / 3;
-}
-
-.background {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-    z-index: 1;
-}
-
-/* Контейнер поверхности Луны - 40% высоты, прижат к низу */
-.moon-surface-container {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 40%;
-    /* 40% от высоты viewport */
-    z-index: 2;
-    overflow: hidden;
-    /* Скрываем то, что выходит за границы */
-    background: transparent;
-    /* Прозрачный фон */
-}
-
-.full-img {
-    height: 100%;
-}
-
-/* Картинка поверхности - изначально скрыта снизу */
-.surface-img {
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    /* Сохраняем пропорции */
-    min-height: 100%;
-    /* Минимум на всю высоту контейнера */
-    object-fit: cover;
-    /* Заполняем контейнер, обрезая при необходимости */
-    object-position: top;
-    /* Важная часть изображения сверху */
-    pointer-events: none;
-    z-index: 2;
-
-    /* top: -300px;
-    transition: top 0.2s ease-out; */
-}
-
-.ship {
-    position: absolute;
-    left: 50%;
-    width: 90px;
-    height: 240px;
-    pointer-events: none;
-    z-index: 3;
-    will-change: transform;
-}
-
-.flame-image {
+/* .flame-image {
     animation: flameFlicker 0.3s infinite alternate;
     transform-origin: center bottom;
 }
@@ -345,7 +266,7 @@ const shipStyle = computed(() => {
 }
 
 /* Анимация пламени */
-@keyframes flameFlicker {
+/* @keyframes flameFlicker {
     0% {
         transform: scaleY(1);
     }
@@ -363,5 +284,105 @@ const shipStyle = computed(() => {
     100% {
         transform: scaleY(1.1) rotate(180deg);
     }
+} */
+
+
+/* Добавить медиа-запросы для мобильных */
+@media (max-width: 768px) {
+  .viewport {
+    height: 100%;
+    max-height: calc(100vh - env(safe-area-inset-bottom, 0px));
+  }
+  
+  .moon-surface-container {
+    height: 35%; /* Уменьшаем высоту поверхности на мобильных */
+  }
 }
+
+@media (max-width: 480px) {
+  .moon-surface-container {
+    height: 30%;
+  }
+  
+  .ship {
+    width: 70px;
+    height: 180px;
+  }
+}
+
+/* Соотношения сторон */
+.ratio-916 {
+  aspect-ratio: 9 / 16;
+}
+
+.ratio-169 {
+  aspect-ratio: 16 / 9;
+}
+
+.ratio-43 {
+  aspect-ratio: 4 / 3;
+}
+
+.background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  z-index: 1;
+}
+
+.moon-surface-container {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 40%;
+  z-index: 2;
+  overflow: hidden;
+  background: transparent;
+}
+
+.full-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.surface-img {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  object-fit: cover;
+  object-position: top;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.ship {
+  position: absolute;
+  left: 50%;
+  width: 90px;
+  height: 240px;
+  pointer-events: none;
+  z-index: 3;
+  will-change: transform;
+}
+
+/* Адаптация соотношений сторон для мобильных */
+@media (max-width: 768px) {
+  .ratio-916 {
+    aspect-ratio: 9 / 18; /* Более узкое на мобильных */
+  }
+  
+  .ratio-169,
+  .ratio-43 {
+    aspect-ratio: 16 / 10;
+  }
+}
+
+
 </style>
