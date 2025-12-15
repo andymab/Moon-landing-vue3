@@ -236,8 +236,7 @@ button {
     }
 
     .start-actions {
-        bottom: 10%;
-
+        bottom: 15%;
     }
 
 }
