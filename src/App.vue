@@ -1,28 +1,30 @@
 <template>
     <div id="app" class="app-root">
-        <div class="container">
+        <div class="app-wrapper">
+            <div class="app-container">
 
-            <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" />
-            <template v-else>
-                <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine" :fuel="fuel"
-                    :turn="turn" :sufix-ratio="ratio" />
-                <Controls v-model:thrust="thrust" v-model:engine="activeEngine" :disabled="gameOver" @step="onStep"
-                    @reset="resetGame" />
-            </template>
-
-
-
+                <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" />
+                <template v-else>
+                    <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine"
+                        :fuel="fuel" :turn="turn" :sufix-ratio="ratio" />
+                    <Controls v-model:thrust="thrust" v-model:engine="activeEngine" :disabled="gameOver" @step="onStep"
+                        @reset="resetGame" />
+                </template>
 
 
-            <AudioManager :thrust="thrust" :engine="activeEngine" :altitude="altitude" :velocity="velocity" :fuel="fuel"
-                :gameOver="gameOver" :message="message" :isLanded="isLanded" ref="audioManager" />
 
-            <!-- 
+
+
+                <AudioManager :thrust="thrust" :engine="activeEngine" :altitude="altitude" :velocity="velocity"
+                    :fuel="fuel" :gameOver="gameOver" :message="message" :isLanded="isLanded" ref="audioManager" />
+
+                <!-- 
             <div class="debug" v-if="debugInfo">
                 <pre>{{ debugInfo }}</pre>
             </div> -->
-            <div v-if="message" class="message-container">
-                <div class="message">{{ message }}</div>
+                <div v-if="message" class="message-container">
+                    <div class="message">{{ message }}</div>
+                </div>
             </div>
         </div>
     </div>
@@ -245,51 +247,71 @@ function resetGame() {
 
 
 <style scoped>
-.container {
-  height: 100%;
-  min-height: 100vh;
-  min-height: -webkit-fill-available; /* Критически важно для iOS */
-  min-height: 100dvh; /* Новый стандарт */
-  width: 100%;
-  position: relative;
-  overflow: hidden;
+
+.app-wrapper {
+  /* fallback + современный dvh */
+  height: 100vh;
+  height: 100dvh; /* где поддерживается */ /* [web:49][web:52] */
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* чтобы origin: top работал естественно */ /* [web:47][web:56] */
+  background: #111;
+  overflow: hidden;
+}
+
+.app-container {
+  width: 1200px;   /* твоя логическая ширина */
+  height: 850px;   /* 650 viewport + 200 controls */
+  transform-origin: top center; /* [web:31][web:40] */
+}
+    /*  старое убераем */
+.container {
+    width: 1200px;
+    height: 850px;
+    /* height: 100%; */
+    /* min-height: 100vh;
+  min-height: -webkit-fill-available; /* Критически важно для iOS */
+    /* min-height: 100dvh; Новый стандарт  */
+    /* width: 100%; */
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
 }
 
 .app-root {
-  background: linear-gradient(#020516, #04102a);
-  height: 100%;
-  min-height: 100vh;
+    background: linear-gradient(#020516, #04102a);
+    /* height: 100%; */
+    /* min-height: 100vh;
   min-height: -webkit-fill-available;
-  min-height: 100dvh;
-  overflow: hidden;
-  position: relative;
+  min-height: 100dvh; */
+    overflow: hidden;
+    position: relative;
 }
 
 /* Для iOS с dynamic island/челкой */
 @supports (padding: max(0px)) {
-  .container {
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-  }
+    .container {
+        padding-top: env(safe-area-inset-top);
+        padding-bottom: env(safe-area-inset-bottom);
+        padding-left: env(safe-area-inset-left);
+        padding-right: env(safe-area-inset-right);
+    }
 }
 
 
 .message-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 20%;
-  pointer-events: none;
-  z-index: 1000;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    /* height: 100%; */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    padding-top: 20%;
+    pointer-events: none;
+    z-index: 1000;
 }
 
 
@@ -327,32 +349,32 @@ function resetGame() {
 
 /* Адаптивность для мобильных */
 @media (max-width: 768px) {
-  .container {
-    height: 100%;
-    min-height: -webkit-fill-available;
-    padding-bottom: max(20px, env(safe-area-inset-bottom));
-  }
-  
-  .message {
-    font-size: 16px;
-    padding: 15px;
-    margin: 10px;
-    max-width: 90%;
-  }
-  
-  .message-container {
-    padding-top: calc(15% + env(safe-area-inset-top, 0px));
-  }
+    .container {
+        /* height: 100%; */
+        /* min-height: -webkit-fill-available; */
+        padding-bottom: max(20px, env(safe-area-inset-bottom));
+    }
+
+    .message {
+        font-size: 16px;
+        padding: 15px;
+        margin: 10px;
+        max-width: 90%;
+    }
+
+    .message-container {
+        padding-top: calc(15% + env(safe-area-inset-top, 0px));
+    }
 }
 
 @media (max-width: 480px) {
-  .message {
-    font-size: 14px;
-    padding: 12px;
-  }
-  
-  .message-container {
-    padding-top: 20%;
-  }
+    .message {
+        font-size: 14px;
+        padding: 12px;
+    }
+
+    .message-container {
+        padding-top: 20%;
+    }
 }
 </style>

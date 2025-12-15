@@ -1,7 +1,7 @@
 <template>
     <div class="viewport" :class="viewportClass">
         <template v-if="fuel && altitude > 0">
-            <svg class="background" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid slice"
+            <svg class="space-background" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid slice"
                 xmlns="http://www.w3.org/2000/svg">
                 <defs>
                     <radialGradient id="sun">
@@ -61,10 +61,10 @@
         <template v-if="fuel == 0">
             <img :src="fuelEmty" class="full-img" :style="surfaceImageStyle" />
         </template>
-        <template v-else-if="altitude <= 0 && velocity < 5">
+        <template v-else-if="altitude <= 0 && velocity <= 5">
             <img :src="success_landing" class="full-img" :style="surfaceImageStyle" />
         </template>
-        <template v-else>
+        <template v-else-if="altitude <= 0 && velocity > 5">
             <img :src="crash_landing" class="full-img" :style="surfaceImageStyle" />
         </template>
         <template v-if="fuel && altitude > 0">
@@ -246,8 +246,8 @@ const shipStyle = computed(() => {
 .viewport {
     position: relative;
     width: 100%;
-    height: 100%;
-    max-height: 100vh;
+    /* height: 80%; */
+    /* max-height: 100vh; */
     overflow: hidden;
     background: linear-gradient(180deg, #020516, #04102a);
     /* Критически важные свойства для iOS */
@@ -277,58 +277,25 @@ const shipStyle = computed(() => {
 }
 
 
-/* .flame-image {
-    animation: flameFlicker 0.3s infinite alternate;
-    transform-origin: center bottom;
-}
-
-.flame-image.retro {
-    animation: flameFlickerRetro 0.3s infinite alternate;
-    transform-origin: center top;
-}
-
-/* Анимация пламени */
-/* @keyframes flameFlicker {
-    0% {
-        transform: scaleY(1);
-    }
-
-    100% {
-        transform: scaleY(1.15);
-    }
-}
-
-@keyframes flameFlickerRetro {
-    0% {
-        transform: scaleY(1) rotate(180deg);
-    }
-
-    100% {
-        transform: scaleY(1.1) rotate(180deg);
-    }
-} */
-
-
-
 /* Соотношения сторон */
 .ratio-916 {
-    aspect-ratio: 9 / 16;
+    /* aspect-ratio: 9 / 16; */
 }
 
 .ratio-169 {
-    aspect-ratio: 16 / 9;
+    /* aspect-ratio: 16 / 9; */
 }
 
 .ratio-43 {
-    aspect-ratio: 4 / 3;
+    /* aspect-ratio: 4 / 3; */
 }
 
-.background {
-    position: absolute;
+.space-background {
+    /* position: absolute;
     top: 0;
-    left: 0;
+    left: 0; */
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     display: block;
     z-index: 1;
     /* Фикс для iOS */
@@ -351,7 +318,7 @@ const shipStyle = computed(() => {
 
 .full-img {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
     object-fit: cover;
     /* Предотвращаем drag & drop на iOS */
     -webkit-user-select: none;
@@ -362,8 +329,8 @@ const shipStyle = computed(() => {
     position: absolute;
     left: 0;
     width: 100%;
-    height: 100%;
-    min-height: 100%;
+    /* height: 100%; */
+    /* min-height: 100%; */
     object-fit: cover;
     object-position: top;
     pointer-events: none;
@@ -390,8 +357,8 @@ const shipStyle = computed(() => {
 /* Добавить медиа-запросы для мобильных */
 @media (max-width: 768px) {
     .viewport {
-        height: 100%;
-        max-height: calc(100vh - env(safe-area-inset-bottom, 0px));
+        /* height: 100%;
+        max-height: calc(100vh - env(safe-area-inset-bottom, 0px)); */
         /* Дополнительные фиксы для iOS */
         -webkit-text-size-adjust: 100%;
         text-size-adjust: 100%;
@@ -404,13 +371,13 @@ const shipStyle = computed(() => {
     }
 
     .ratio-916 {
-        aspect-ratio: 9 / 18;
+        /* aspect-ratio: 9 / 18; */
         /* Более узкое на мобильных */
     }
 
     .ratio-169,
     .ratio-43 {
-        aspect-ratio: 16 / 10;
+        /* aspect-ratio: 16 / 10; */
     }
 
     /* Более агрессивные меры против зума на iOS */
@@ -446,7 +413,7 @@ const shipStyle = computed(() => {
 /* Фикс для Samsung Internet */
 @supports (-webkit-touch-callout: none) and (not (-webkit-overflow-scrolling: touch)) {
     .viewport {
-        height: -webkit-fill-available;
+        /* height: -webkit-fill-available; */
     }
 }
 
