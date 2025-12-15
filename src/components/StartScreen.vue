@@ -138,26 +138,20 @@ function startGame() { emit('start') }
 </script>
 <style scoped>
 .start-screen {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-height: 100vh;
-  overflow: hidden;
-  background: linear-gradient(180deg, #020516, #04102a);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(180deg, #020516, #04102a);
 }
 
-@media (max-width: 768px) {
-  .start-screen {
-    height: 100%;
-    max-height: calc(100vh - env(safe-area-inset-bottom, 0px));
-  }
-  
-}
+
 
 .full-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 
 .full-img.aspect-916 {
@@ -198,9 +192,9 @@ function startGame() { emit('start') }
 
 .start-actions {
     position: absolute;
-    bottom: 10px;
+    bottom: 5%;
     padding: 16px;
-    display:flex;
+    display: flex;
 }
 
 .align-center {
@@ -233,5 +227,18 @@ button {
     background: rgba(31, 20, 6, 0.831);
     color: #fff;
     border: none
+}
+
+@media (max-width: 768px) {
+    .start-screen {
+        height: 100%;
+        max-height: calc(100vh - env(safe-area-inset-bottom, 0px));
+    }
+
+    .start-actions {
+        bottom: 10%;
+
+    }
+
 }
 </style>
