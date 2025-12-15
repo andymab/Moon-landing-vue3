@@ -13,17 +13,52 @@
 html, body {
   height: 100%;
   width: 100%;
-  overflow: hidden; /* Предотвращаем скролл */
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent; /* Убираем подсветку при тапе */
+  touch-action: manipulation; /* Оптимизируем для касаний */
 }
 
 body{
   font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
   background: linear-gradient(180deg, var(--bg-1), #04102a);
   color: #e6eef8;
+  /* Критически важные свойства для iOS */
+  -webkit-text-size-adjust: 100%; /* Предотвращает масштабирование текста */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: none; /* Отключаем авто-масштаб текста */
 }
 
 button{
   cursor: pointer;
+  /* Убираем стандартные стили iOS для кнопок */
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  border-radius: 0;
+}
+
+/* Отключаем масштабирование при двойном тапе в iOS */
+* {
+  -webkit-touch-callout: none; /* Отключаем вызов меню при долгом нажатии */
+  -webkit-user-select: none;    /* Отключаем выделение текста */
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Но разрешаем выделение текста в информационных блоках */
+.info-card, .message {
+  -webkit-user-select: text;
+  -moz-user-select: text;
+  -ms-user-select: text;
+  user-select: text;
+}
+
+
+/* Предотвращаем зум на полях ввода (если они появятся) */
+input, textarea {
+  font-size: 16px; /* Предотвращает зум iOS */
 }
 
 /* Фикс для мобильных браузеров */
@@ -31,6 +66,14 @@ button{
   /* iOS Safari */
   body {
     height: -webkit-fill-available;
+  }
+
+    /* Отключаем bounce-эффект в iOS */
+  html, body {
+    overscroll-behavior-y: none;
+    -webkit-overflow-scrolling: touch;
+    position: fixed;
+    overflow: hidden;
   }
 }
 
@@ -42,4 +85,13 @@ button{
 body {
   -ms-overflow-style: none;  /* IE и Edge */
   scrollbar-width: none;  /* Firefox */
+}
+
+/* Мета-тег viewport должен быть в HTML, но на всякий случай CSS-фиксы */
+@viewport {
+  width: device-width;
+  initial-scale: 1;
+  maximum-scale: 1;
+  minimum-scale: 1;
+  user-scalable: no;
 }

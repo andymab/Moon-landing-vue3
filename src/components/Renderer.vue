@@ -154,12 +154,12 @@ const viewportH = 650 // высота viewport
 
 //const CONTAINER_HEIGHT_PERCENT = viewportClass.value === 'ratio-916' ? 40 : 16 // 40% от высоты viewport
 const CONTAINER_HEIGHT_PERCENT = computed(() => {
-  if (window.innerWidth <= 768) {
-    return viewportClass.value === 'ratio-916' ? 35 : 14;
-  }
-  return viewportClass.value === 'ratio-916' ? 40 : 16;
+    if (window.innerWidth <= 768) {
+        return viewportClass.value === 'ratio-916' ? 35 : 14;
+    }
+    return viewportClass.value === 'ratio-916' ? 40 : 16;
 });
-const CONTAINER_HEIGHT = viewportH * (CONTAINER_HEIGHT_PERCENT / 100) 
+const CONTAINER_HEIGHT = viewportH * (CONTAINER_HEIGHT_PERCENT / 100)
 
 // Вычисляем положение верхней границы поверхности (surfaceY)
 const surfaceY = computed(() => {
@@ -245,14 +245,37 @@ const shipStyle = computed(() => {
 
 <style scoped>
 .viewport {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  max-height: 100vh;
-  overflow: hidden;
-  background: linear-gradient(180deg, #020516, #04102a);
+    position: relative;
+    width: 100%;
+    height: 100%;
+    max-height: 100vh;
+    overflow: hidden;
+    background: linear-gradient(180deg, #020516, #04102a);
+    /* Критически важные свойства для iOS */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: pan-y pinch-zoom;
+    /* Ограничиваем жесты */
+    transform: translateZ(0);
+    /* Аппаратное ускорение, помогает с рендерингом */
+    backface-visibility: hidden;
+    perspective: 1000;
+
 }
 
+/* Предотвращаем выделение и контекстное меню */
+.viewport * {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+}
+
+/* Отключаем стандартное поведение касаний для изображений */
+.viewport img {
+    -webkit-touch-callout: none;
+    pointer-events: none;
+}
 
 
 /* .flame-image {
@@ -287,102 +310,151 @@ const shipStyle = computed(() => {
 } */
 
 
-/* Добавить медиа-запросы для мобильных */
-@media (max-width: 768px) {
-  .viewport {
-    height: 100%;
-    max-height: calc(100vh - env(safe-area-inset-bottom, 0px));
-  }
-  
-  .moon-surface-container {
-    height: 35%; /* Уменьшаем высоту поверхности на мобильных */
-  }
-}
-
-@media (max-width: 480px) {
-  .moon-surface-container {
-    height: 30%;
-  }
-  
-  .ship {
-    width: 70px;
-    height: 180px;
-  }
-}
 
 /* Соотношения сторон */
 .ratio-916 {
-  aspect-ratio: 9 / 16;
+    aspect-ratio: 9 / 16;
 }
 
 .ratio-169 {
-  aspect-ratio: 16 / 9;
+    aspect-ratio: 16 / 9;
 }
 
 .ratio-43 {
-  aspect-ratio: 4 / 3;
+    aspect-ratio: 4 / 3;
 }
 
 .background {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: block;
-  z-index: 1;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    z-index: 1;
+    /* Фикс для iOS */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: none;
 }
 
 .moon-surface-container {
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 100%;
-  height: 40%;
-  z-index: 2;
-  overflow: hidden;
-  background: transparent;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40%;
+    z-index: 2;
+    overflow: hidden;
+    background: transparent;
+    /* Запрещаем взаимодействие, которое может вызвать зум */
+    touch-action: none;
 }
 
 .full-img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Предотвращаем drag & drop на iOS */
+    -webkit-user-select: none;
+    -webkit-touch-callout: none;
 }
 
 .surface-img {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  min-height: 100%;
-  object-fit: cover;
-  object-position: top;
-  pointer-events: none;
-  z-index: 2;
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    min-height: 100%;
+    object-fit: cover;
+    object-position: top;
+    pointer-events: none;
+    z-index: 2;
+
+    /* Отключаем стандартное поведение изображений на iOS */
+    -webkit-touch-callout: none;
+    -webkit-user-drag: none;
 }
 
 .ship {
-  position: absolute;
-  left: 50%;
-  width: 90px;
-  height: 240px;
-  pointer-events: none;
-  z-index: 3;
-  will-change: transform;
+    position: absolute;
+    left: 50%;
+    width: 90px;
+    height: 240px;
+    pointer-events: none;
+    z-index: 3;
+    will-change: transform;
+    /* Аппаратное ускорение для плавности */
+    transform: translateZ(0);
 }
 
-/* Адаптация соотношений сторон для мобильных */
+
+/* Добавить медиа-запросы для мобильных */
 @media (max-width: 768px) {
-  .ratio-916 {
-    aspect-ratio: 9 / 18; /* Более узкое на мобильных */
-  }
-  
-  .ratio-169,
-  .ratio-43 {
-    aspect-ratio: 16 / 10;
-  }
+    .viewport {
+        height: 100%;
+        max-height: calc(100vh - env(safe-area-inset-bottom, 0px));
+        /* Дополнительные фиксы для iOS */
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+
+    }
+
+    .moon-surface-container {
+        height: 35%;
+        /* Уменьшаем высоту поверхности на мобильных */
+    }
+
+    .ratio-916 {
+        aspect-ratio: 9 / 18;
+        /* Более узкое на мобильных */
+    }
+
+    .ratio-169,
+    .ratio-43 {
+        aspect-ratio: 16 / 10;
+    }
+
+    /* Более агрессивные меры против зума на iOS */
+    html,
+    body {
+        touch-action: pan-y;
+    }
+
+    /* Отключаем стандартные жесты iOS */
+    .viewport {
+        -webkit-overflow-scrolling: touch;
+        overflow-scrolling: touch;
+    }
+
 }
 
+@media (max-width: 480px) {
+    .moon-surface-container {
+        height: 30%;
+    }
 
+    .ship {
+        width: 70px;
+        height: 180px;
+    }
+
+    /* На самых маленьких экранах полностью отключаем зум */
+    html {
+        touch-action: pan-y;
+    }
+}
+
+/* Фикс для Samsung Internet */
+@supports (-webkit-touch-callout: none) and (not (-webkit-overflow-scrolling: touch)) {
+    .viewport {
+        height: -webkit-fill-available;
+    }
+}
+
+/* Фикс для Android Chrome */
+@media screen and (max-width: 768px) {
+    html {
+        touch-action: manipulation;
+    }
+}
 </style>
