@@ -152,14 +152,12 @@ const viewportH = 650 // высота viewport
 
 // Параметры поверхности
 
-//const CONTAINER_HEIGHT_PERCENT = viewportClass.value === 'ratio-916' ? 40 : 16 // 40% от высоты viewport
-const CONTAINER_HEIGHT_PERCENT = computed(() => {
-    if (window.innerWidth <= 768) {
-        return viewportClass.value === 'ratio-916' ? 35 : 14;
-    }
-    return viewportClass.value === 'ratio-916' ? 40 : 16;
+const CONTAINER_HEIGHT = computed(() => {
+    const percent = window.innerWidth <= 768 
+        ? (viewportClass.value === 'ratio-916' ? 35 : 14)
+        : (viewportClass.value === 'ratio-916' ? 40 : 16);
+    return 650 * (percent / 100); // viewportH теперь тоже внутри computed
 });
-const CONTAINER_HEIGHT = viewportH * (CONTAINER_HEIGHT_PERCENT / 100)
 
 // Вычисляем положение верхней границы поверхности (surfaceY)
 const surfaceY = computed(() => {
@@ -171,7 +169,7 @@ const surfaceY = computed(() => {
     // Значит top должен быть: CONTAINER_HEIGHT - видимаяЧасть = 260 - 26 = 234px
 
     const VISIBLE_PERCENT_AT_START = 0.1 // 10%
-    const START_TOP = CONTAINER_HEIGHT * (1 - VISIBLE_PERCENT_AT_START) // 234px
+    const START_TOP = CONTAINER_HEIGHT.value * (1 - VISIBLE_PERCENT_AT_START) // 234px
 
     // Конечное значение top = 0 (вся поверхность видна)
     const END_TOP = 0
@@ -221,7 +219,7 @@ const topY = 10
 // При посадке ракета должна быть чуть выше поверхности
 const landingY = computed(() => {
     // Когда surfaceY = 0 (картинка полностью поднята), ракета должна быть над ней
-    const surfaceTop = viewportH - CONTAINER_HEIGHT // верхняя граница контейнера
+    const surfaceTop = viewportH - CONTAINER_HEIGHT.value // верхняя граница контейнера
     const y = surfaceTop - shipBottomOffset
     return Math.max(10, Math.min(y, viewportH - 40))
 })
@@ -241,6 +239,7 @@ const shipStyle = computed(() => {
         zIndex: 3
     }
 })
+
 </script>
 
 <style scoped>
