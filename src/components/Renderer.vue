@@ -343,6 +343,7 @@ const shipStyle = computed(() => {
 
 .ship {
     position: absolute;
+    top:0;
     left: 50%;
     width: 90px;
     height: 240px;
