@@ -3,7 +3,7 @@
         <div class="app-wrapper">
             <div class="app-container">
 
-                <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" />
+                <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" @start-auto="AutoPilot"/>
                 <template v-else>
                     <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine"
                         :fuel="fuel" :turn="turn" :sufix-ratio="ratio" />
@@ -121,6 +121,32 @@ watch(soundEvents, (newEvents) => {
 watch(thrust, (newVal) => {
     console.log('Thrust changed to:', newVal)
 })
+
+function AutoPilot() {
+    console.log('Автопилот активирован')
+    // Логика автопилота
+    let autoThrust = 0
+
+    const autoInterval = setInterval(() => {
+        if (gameOver.value) {
+            clearInterval(autoInterval)
+            return
+        }
+
+        // Простая логика автопилота
+        if (altitude.value > 790) {
+            autoThrust = 0
+        } else if (altitude.value > 100) {
+            autoThrust = 80
+        } else if (altitude.value > 70) {
+            autoThrust = 60
+        }
+
+
+        thrust.value = autoThrust
+        onStep()
+    }, 1000)
+}
 
 function onStep() {
     // Проигрываем звук кнопки
@@ -261,13 +287,13 @@ function resetGame() {
 
 .app-container {
   width: 1200px;   /* твоя логическая ширина */
-  height: 850px;   /* 650 viewport + 200 controls */
+  height: 700px;   /* 650 viewport + 200 controls */
   transform-origin: top center; /* [web:31][web:40] */
 }
     /*  старое убераем */
 .container {
     width: 1200px;
-    height: 850px;
+    height: 700px;
     /* height: 100%; */
     /* min-height: 100vh;
   min-height: -webkit-fill-available; /* Критически важно для iOS */

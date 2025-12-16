@@ -68,12 +68,24 @@
 </template>
 
 <script setup>
-import { ref, watch } from 'vue'
+import { ref, watch, computed  } from 'vue'
 const props = defineProps({ thrust: { type: Number, default: 0 }, engine: { type: String, default: 'retro' }, disabled: { type: Boolean, default: false } })
 const emit = defineEmits(['update:thrust', 'update:engine', 'step', 'reset'])
 
-const thrustLocal = ref(props.thrust)
+const thrustLocal = computed({
+    get: () => props.thrust,
+    set: (value) => {
+        console.log('Установка thrust:', value)
+        emit('update:thrust', value)
+    }
+})
+
 const engineLocal = ref(props.engine)
+
+watch(() => props.thrust, (newVal) => {
+    console.log('Получено новое значение thrust от родителя:', newVal)
+    thrustLocal.value = newVal
+})
 
 watch(thrustLocal, (v) => emit('update:thrust', v))
 watch(engineLocal, (v) => emit('update:engine', v))
@@ -84,9 +96,9 @@ function emitReset() { emit('reset') }
 
 <style scoped>
 .controls {
-    position: absolute;
+    /* position: absolute;
     bottom: 0;
-    z-index: 2;
+    z-index: 2; */
     width: 100%;
 
 

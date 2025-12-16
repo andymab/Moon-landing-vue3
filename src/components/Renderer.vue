@@ -1,22 +1,7 @@
 <template>
     <div class="viewport" :class="viewportClass">
         <template v-if="fuel && altitude > 0">
-            <svg class="space-background" viewBox="0 0 1200 650" preserveAspectRatio="xMidYMid slice"
-                xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <radialGradient id="sun">
-                        <stop offset="0%" stop-color="#fff6c2" />
-                        <stop offset="100%" stop-color="#ffd27a" stop-opacity="0.08" />
-                    </radialGradient>
-                </defs>
-
-                <rect width="1200" height="650" fill="#020516" />
-                <g v-for="(s, i) in stars" :key="i">
-                    <circle :cx="s.x" :cy="s.y + bgOffset" :r="s.r" fill="#fff" :opacity="s.o" />
-                </g>
-
-                <circle :cx="sunX" :cy="sunY" r="90" fill="url(#sun)" :opacity="0.22" />
-            </svg>
+<SpaceSun class="space-background" />
 
             <!-- Контейнер поверхности Луны (40% высоты, прижат к низу) -->
             <div class="moon-surface-container">
@@ -76,6 +61,7 @@
 <script setup>
 import { computed, ref, onMounted, onBeforeUnmount, toRef } from 'vue'
 import Hud from './Hud.vue'
+import SpaceSun from './background/SpaceSun.vue'
 
 
 const props = defineProps({
@@ -138,16 +124,7 @@ const flameStyle = computed(() => ({
 }))
 
 
-// stable stars
-const stars = Array.from({ length: 120 }, (_, i) => ({
-    x: (i * 73) % 1200 + 10,
-    y: ((i * 37) % 500) + 10,
-    r: (i % 5) / 3 + 0.3,
-    o: 0.5 + ((i % 7) / 14)
-}))
 
-const sunX = 140
-const sunY = 140
 const viewportH = 650 // высота viewport
 
 // Параметры поверхности
@@ -246,8 +223,8 @@ const shipStyle = computed(() => {
 .viewport {
     position: relative;
     width: 100%;
-    /* height: 80%; */
-    /* max-height: 100vh; */
+    height: 100%;
+
     overflow: hidden;
     background: linear-gradient(180deg, #020516, #04102a);
     /* Критически важные свойства для iOS */
@@ -291,11 +268,8 @@ const shipStyle = computed(() => {
 }
 
 .space-background {
-    /* position: absolute;
-    top: 0;
-    left: 0; */
     width: 100%;
-    /* height: 100%; */
+    height: 100%;
     display: block;
     z-index: 1;
     /* Фикс для iOS */
@@ -318,7 +292,7 @@ const shipStyle = computed(() => {
 
 .full-img {
     width: 100%;
-    /* height: 100%; */
+    height: 100%;
     object-fit: cover;
     /* Предотвращаем drag & drop на iOS */
     -webkit-user-select: none;
