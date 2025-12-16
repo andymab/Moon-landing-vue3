@@ -115,8 +115,8 @@
                 Помощь
             </button>
             <button class="btn-start" @click="startGameAuto">
-                Автопилот
-            </button>
+                Автомат
+                 </button>
         </div>
 
 
@@ -207,9 +207,9 @@ function startGameAuto() { emit('start-auto') }
     position: absolute;
     top: clamp(40px, 5vw, 80px);
     /* адаптивный отступ сверху */
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
+    left: 10%;
+    transform: translateX(-10%);
+    /* text-align: center; */
     padding: 0 clamp(16px, 4vw, 26px);
     color: bisque;
     z-index: 2;
@@ -239,20 +239,13 @@ function startGameAuto() { emit('start-auto') }
 }
 
 .start-actions {
-    flex: 0 0 auto;
-
     display: flex;
     justify-content: space-around;
     gap: 0.75rem;
-
-    padding: 8px 12px 16px;
+    padding: 12px;
     background: rgba(0, 0, 0, 0.85);
     backdrop-filter: blur(8px);
 
-    /* КЛЮЧЕВОЕ: прижатие к низу без absolute */
-    margin-top: auto;
-
-    z-index: 5;
 }
 
 /* Фиксы для iOS safe-area */
