@@ -1,6 +1,5 @@
 <template>
-    <div id="app" class="app-root">
-        <div class="app-wrapper">
+    <div id="app-root" >
             <div class="app-container">
 
                 <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" @start-auto="AutoPilot" />
@@ -10,9 +9,6 @@
                     <Controls v-model:thrust="thrust" v-model:engine="activeEngine" :disabled="gameOver" @step="onStep"
                         @reset="resetGame" />
                 </template>
-
-
-
 
 
                 <AudioManager :thrust="thrust" :engine="activeEngine" :altitude="altitude" :velocity="velocity"
@@ -26,7 +22,7 @@
                     <div class="message">{{ message }}</div>
                 </div>
             </div>
-        </div>
+
     </div>
 </template>
 
@@ -273,65 +269,44 @@ function resetGame() {
 
 
 <style scoped>
-.app-wrapper {
-    /* fallback + современный dvh */
-    height: 100vh;
-    height: 100dvh;
-    /* где поддерживается */
-    /* [web:49][web:52] */
+
+#app-root {
+    background: linear-gradient(#020516, #04102a);
+    height: 100dvh; /* dynamic viewport height — идеально для мобильных */
+    width: 100vw;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    /* чтобы origin: top работал естественно */
-    /* [web:47][web:56] */
-    background: #111;
-    overflow: hidden;
+    overflow: hidden; /* убираем все полоски прокрутки */
+    position: relative;
 }
+
+
 
 .app-container {
-    width: min(1200px, 95vw);
-    height: min(700px, 90dvh);
-    max-width: 95vw;
-    max-height: 90dvh;
-
-    transform-origin: top center;
-    /* [web:31][web:40] */
-}
-
-/*  старое убераем */
-.container {
-    width: 1200px;
-    height: 700px;
-    /* height: 100%; */
-    /* min-height: 100vh;
-  min-height: -webkit-fill-available; /* Критически важно для iOS */
-    /* min-height: 100dvh; Новый стандарт  */
-    /* width: 100%; */
-    position: relative;
-    overflow: hidden;
+    width: 100%; /* заполняем всю доступную ширину */
+    height: 100%; /* заполняем всю доступную высоту */
+    max-width: 1200px; /* максимум на десктопе */
+    max-height: 700px; /* максимум на десктопе */
+    
     display: flex;
-    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background: #111;
+    
+    /* iOS Safari фиксы */
+    box-sizing: border-box;
+    padding: 20px; /* внутренние отступы вместо внешних */
+    overflow: auto; /* прокрутка только внутри контейнера при необходимости */
+    
+    /* Для идеального центрирования на десктопе */
+    margin: 0 auto;
 }
 
-.app-root {
-    background: linear-gradient(#020516, #04102a);
-    /* height: 100%; */
-    /* min-height: 100vh;
-  min-height: -webkit-fill-available;
-  min-height: 100dvh; */
-    overflow: hidden;
-    position: relative;
-}
 
-/* Для iOS с dynamic island/челкой */
-@supports (padding: max(0px)) {
-    .container {
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-        padding-left: env(safe-area-inset-left);
-        padding-right: env(safe-area-inset-right);
-    }
-}
+
+
+
 
 
 .message-container {
@@ -383,12 +358,6 @@ function resetGame() {
 
 /* Адаптивность для мобильных */
 @media (max-width: 768px) {
-    .container {
-        /* height: 100%; */
-        /* min-height: -webkit-fill-available; */
-        padding-bottom: max(20px, env(safe-area-inset-bottom));
-    }
-
     .message {
         font-size: 16px;
         padding: 15px;

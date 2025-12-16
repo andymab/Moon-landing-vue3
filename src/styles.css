@@ -1,35 +1,42 @@
-:root{
+:root {
   --bg-1: #020516;
-  --card: rgba(255,255,255,0.03);
+  --card: rgba(255, 255, 255, 0.03);
   --accent: #9fb;
 }
 
-*{
+* {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
-  /* height: 100%;
-  width: 100%; */
+html,
+body {
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
   overflow: hidden;
-  -webkit-tap-highlight-color: transparent; /* Убираем подсветку при тапе */
-  touch-action: manipulation; /* Оптимизируем для касаний */
+  -webkit-tap-highlight-color: transparent;
+  /* Убираем подсветку при тапе */
+  touch-action: manipulation;
+  /* Оптимизируем для касаний */
 }
 
-body{
+body {
   font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, Arial;
   background: linear-gradient(180deg, var(--bg-1), #04102a);
   color: #e6eef8;
   /* Критически важные свойства для iOS */
-  -webkit-text-size-adjust: 100%; /* Предотвращает масштабирование текста */
+  -webkit-text-size-adjust: 100%;
+  /* Предотвращает масштабирование текста */
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-size-adjust: none; /* Отключаем авто-масштаб текста */
+  text-size-adjust: none;
+  /* Отключаем авто-масштаб текста */
 }
 
-button{
+button {
   cursor: pointer;
   /* Убираем стандартные стили iOS для кнопок */
   -webkit-appearance: none;
@@ -40,15 +47,18 @@ button{
 
 /* Отключаем масштабирование при двойном тапе в iOS */
 * {
-  -webkit-touch-callout: none; /* Отключаем вызов меню при долгом нажатии */
-  -webkit-user-select: none;    /* Отключаем выделение текста */
+  -webkit-touch-callout: none;
+  /* Отключаем вызов меню при долгом нажатии */
+  -webkit-user-select: none;
+  /* Отключаем выделение текста */
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
 }
 
 /* Но разрешаем выделение текста в информационных блоках */
-.info-card, .message {
+.info-card,
+.message {
   -webkit-user-select: text;
   -moz-user-select: text;
   -ms-user-select: text;
@@ -57,19 +67,23 @@ button{
 
 
 /* Предотвращаем зум на полях ввода (если они появятся) */
-input, textarea {
-  font-size: 16px; /* Предотвращает зум iOS */
+input,
+textarea {
+  font-size: 16px;
+  /* Предотвращает зум iOS */
 }
 
 /* Фикс для мобильных браузеров */
 @supports (-webkit-touch-callout: none) {
+
   /* iOS Safari */
   body {
     height: -webkit-fill-available;
   }
 
-    /* Отключаем bounce-эффект в iOS */
-  html, body {
+  /* Отключаем bounce-эффект в iOS */
+  html,
+  body {
     overscroll-behavior-y: none;
     -webkit-overflow-scrolling: touch;
     position: fixed;
@@ -83,8 +97,10 @@ input, textarea {
 }
 
 body {
-  -ms-overflow-style: none;  /* IE и Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE и Edge */
+  scrollbar-width: none;
+  /* Firefox */
 }
 
 /* Мета-тег viewport должен быть в HTML, но на всякий случай CSS-фиксы */
