@@ -293,9 +293,7 @@ function resetGame() {
     height: 100%;
     /* заполняем всю доступную высоту */
     max-width: 1200px;
-    /* максимум на десктопе */
-    max-height: 700px;
-    /* максимум на десктопе */
+
 
     display: flex;
     justify-content: center;
@@ -394,6 +392,11 @@ function resetGame() {
     .message-container {
         padding-top: calc(15% + env(safe-area-inset-top, 0px));
     }
+
+    .app-container {
+        max-height: 700px;
+    }
+
 }
 
 @media (max-width: 480px) {
@@ -404,6 +407,10 @@ function resetGame() {
 
     .message-container {
         padding-top: 20%;
+    }
+
+    .app-container {
+        max-height: 700px;
     }
 }
 </style>
