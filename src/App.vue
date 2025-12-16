@@ -3,7 +3,7 @@
         <div class="app-wrapper">
             <div class="app-container">
 
-                <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" @start-auto="AutoPilot"/>
+                <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" @start-auto="AutoPilot" />
                 <template v-else>
                     <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine"
                         :fuel="fuel" :turn="turn" :sufix-ratio="ratio" />
@@ -273,24 +273,32 @@ function resetGame() {
 
 
 <style scoped>
-
 .app-wrapper {
-  /* fallback + современный dvh */
-  height: 100vh;
-  height: 100dvh; /* где поддерживается */ /* [web:49][web:52] */
-  display: flex;
-  justify-content: center;
-  align-items: flex-start; /* чтобы origin: top работал естественно */ /* [web:47][web:56] */
-  background: #111;
-  overflow: hidden;
+    /* fallback + современный dvh */
+    height: 100vh;
+    height: 100dvh;
+    /* где поддерживается */
+    /* [web:49][web:52] */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    /* чтобы origin: top работал естественно */
+    /* [web:47][web:56] */
+    background: #111;
+    overflow: hidden;
 }
 
 .app-container {
-  width: 1200px;   /* твоя логическая ширина */
-  height: 700px;   /* 650 viewport + 200 controls */
-  transform-origin: top center; /* [web:31][web:40] */
+    width: min(1200px, 95vw);
+    height: min(700px, 90dvh);
+    max-width: 95vw;
+    max-height: 90dvh;
+
+    transform-origin: top center;
+    /* [web:31][web:40] */
 }
-    /*  старое убераем */
+
+/*  старое убераем */
 .container {
     width: 1200px;
     height: 700px;
