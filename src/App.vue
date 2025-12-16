@@ -279,6 +279,7 @@ function resetGame() {
     align-items: flex-start;
     overflow: hidden; /* убираем все полоски прокрутки */
     position: relative;
+    background: rgba(0, 0, 0, 0.85);
 }
 
 
