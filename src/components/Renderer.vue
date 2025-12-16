@@ -1,7 +1,7 @@
 <template>
     <div class="viewport" :class="viewportClass">
         <template v-if="fuel && altitude > 0">
-<SpaceSun class="space-background" />
+            <SpaceSun class="space-background" />
 
             <!-- Контейнер поверхности Луны (40% высоты, прижат к низу) -->
             <div class="moon-surface-container">
@@ -130,7 +130,7 @@ const viewportH = 650 // высота viewport
 // Параметры поверхности
 
 const CONTAINER_HEIGHT = computed(() => {
-    const percent = window.innerWidth <= 768 
+    const percent = window.innerWidth <= 768
         ? (viewportClass.value === 'ratio-916' ? 35 : 14)
         : (viewportClass.value === 'ratio-916' ? 40 : 16);
     return 650 * (percent / 100); // viewportH теперь тоже внутри computed
@@ -221,25 +221,25 @@ const shipStyle = computed(() => {
 
 <style scoped>
 .viewport {
-    position: relative;
+    /* position: relative;
     width: 100%;
     height: 100%;
 
-    overflow: hidden;
-    background: linear-gradient(180deg, #020516, #04102a);
-    /* Критически важные свойства для iOS */
-    -webkit-tap-highlight-color: transparent;
-    touch-action: pan-y pinch-zoom;
-    /* Ограничиваем жесты */
-    transform: translateZ(0);
-    /* Аппаратное ускорение, помогает с рендерингом */
-    backface-visibility: hidden;
-    perspective: 1000;
+    overflow: hidden; */
+
+    flex: 1 1 auto;
+    position: relative;
+
+
+
+
+
+
 
 }
 
 /* Предотвращаем выделение и контекстное меню */
-.viewport * {
+.viewport-wrapper * {
     -webkit-user-drag: none;
     -khtml-user-drag: none;
     -moz-user-drag: none;
@@ -317,7 +317,7 @@ const shipStyle = computed(() => {
 
 .ship {
     position: absolute;
-    top:0;
+    top: 0;
     left: 50%;
     width: 90px;
     height: 240px;

@@ -154,12 +154,6 @@ function startGameAuto() { emit('start-auto') }
     width: 100%;
     max-width: 100%;
     height: 100%;
-    /* видимая высота окна */
-    /* height: 100vh;
-    height: 100dvh; */
-    /* где есть поддержка */
-    /* [web:10][web:67] */
-
     overflow: hidden;
     background: linear-gradient(180deg, #020516, #04102a);
 }

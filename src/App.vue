@@ -1,27 +1,29 @@
 <template>
-    <div id="app-root" >
-            <div class="app-container">
+    <div id="app-root">
+        <div class="app-container">
 
-                <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" @start-auto="AutoPilot" />
-                <template v-else>
+            <StartScreen v-if="turn === 0" :sufix-ratio="ratio" @start="turn = turn + 1" @start-auto="AutoPilot" />
+            <template v-else>
+                <div class="viewport-wrapper">
                     <Renderer :altitude="altitude" :velocity="velocity" :thrust="thrust" :engine="activeEngine"
                         :fuel="fuel" :turn="turn" :sufix-ratio="ratio" />
                     <Controls v-model:thrust="thrust" v-model:engine="activeEngine" :disabled="gameOver" @step="onStep"
                         @reset="resetGame" />
-                </template>
+                </div>
+            </template>
 
 
-                <AudioManager :thrust="thrust" :engine="activeEngine" :altitude="altitude" :velocity="velocity"
-                    :fuel="fuel" :gameOver="gameOver" :message="message" :isLanded="isLanded" ref="audioManager" />
+            <AudioManager :thrust="thrust" :engine="activeEngine" :altitude="altitude" :velocity="velocity" :fuel="fuel"
+                :gameOver="gameOver" :message="message" :isLanded="isLanded" ref="audioManager" />
 
-                <!-- 
+            <!-- 
             <div class="debug" v-if="debugInfo">
                 <pre>{{ debugInfo }}</pre>
             </div> -->
-                <div v-if="message" class="message-container">
-                    <div class="message">{{ message }}</div>
-                </div>
+            <div v-if="message" class="message-container">
+                <div class="message">{{ message }}</div>
             </div>
+        </div>
 
     </div>
 </template>
@@ -269,15 +271,16 @@ function resetGame() {
 
 
 <style scoped>
-
 #app-root {
     background: linear-gradient(#020516, #04102a);
-    height: 100dvh; /* dynamic viewport height — идеально для мобильных */
+    height: 100dvh;
+    /* dynamic viewport height — идеально для мобильных */
     width: 100vw;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    overflow: hidden; /* убираем все полоски прокрутки */
+    overflow: hidden;
+    /* убираем все полоски прокрутки */
     position: relative;
     background: rgba(0, 0, 0, 0.85);
 }
@@ -285,28 +288,50 @@ function resetGame() {
 
 
 .app-container {
-    width: 100%; /* заполняем всю доступную ширину */
-    height: 100%; /* заполняем всю доступную высоту */
-    max-width: 1200px; /* максимум на десктопе */
-    max-height: 700px; /* максимум на десктопе */
-    
+    width: 100%;
+    /* заполняем всю доступную ширину */
+    height: 100%;
+    /* заполняем всю доступную высоту */
+    max-width: 1200px;
+    /* максимум на десктопе */
+    max-height: 700px;
+    /* максимум на десктопе */
+
     display: flex;
     justify-content: center;
     align-items: flex-start;
     background: #111;
-    
+
     /* iOS Safari фиксы */
     box-sizing: border-box;
     /* padding: 20px;  */
-    overflow: auto; /* прокрутка только внутри контейнера при необходимости */
-    
+    overflow: auto;
+    /* прокрутка только внутри контейнера при необходимости */
+
     /* Для идеального центрирования на десктопе */
     margin: 0 auto;
 }
 
 
 
+.viewport-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: linear-gradient(180deg, #020516, #04102a);
+    /* Критически важные свойства для iOS */
+    -webkit-tap-highlight-color: transparent;
+    touch-action: pan-y pinch-zoom;
+    /* Ограничиваем жесты */
+    transform: translateZ(0);
+    /* Аппаратное ускорение, помогает с рендерингом */
+    backface-visibility: hidden;
+    perspective: 1000;
 
+}
 
 
 
