@@ -5,7 +5,7 @@
                 <div class="stat"><label>Высота</label>
                     <div class="stat-info">{{ altitudeDisplay }}</div>
                 </div>
-                <div class="stat"><label>Ускорение</label>
+                <div class="stat"><label>Скорость</label>
                     <div class="stat-info">{{ velocityDisplay }}</div>
                 </div>
                 <div class="stat"><label>Топливо</label>

@@ -1,7 +1,7 @@
 <template>
     <div class="viewport" :class="viewportClass">
         <template v-if="fuel && altitude > 0">
-            <SpaceSun class="space-background" />
+            <SpaceSun class="space-wrapper" />
 
             <!-- Контейнер поверхности Луны (40% высоты, прижат к низу) -->
             <div class="moon-surface-container">
@@ -11,7 +11,7 @@
 
             <!-- Rocket (absolute) -->
             <div class="ship" :style="shipStyle" aria-hidden="false">
-                <svg width="90" height="260" viewBox="0 0 90 200" xmlns="http://www.w3.org/2000/svg">
+                <svg width="90" height="260" viewBox="0 0 180 400" xmlns="http://www.w3.org/2000/svg">
                     <g transform="translate(45,100)">
                         <ellipse cx="0" cy="-20" rx="14" ry="42" fill="#e6e6e6" stroke="#999" />
                         <rect x="-16" y="-66" width="32" height="36" rx="8" fill="#cfcfcf" stroke="#999" />
@@ -44,13 +44,13 @@
 
         </template>
         <template v-if="fuel == 0">
-            <img :src="fuelEmty" class="full-img" :style="surfaceImageStyle" />
+            <img :src="fuelEmty" class="full-img" />
         </template>
         <template v-else-if="altitude <= 0 && velocity <= 5">
-            <img :src="success_landing" class="full-img" :style="surfaceImageStyle" />
+            <img :src="success_landing" class="full-img"  />
         </template>
         <template v-else-if="altitude <= 0 && velocity > 5">
-            <img :src="crash_landing" class="full-img" :style="surfaceImageStyle" />
+                <img :src="crash_landing" class="full-img" />
         </template>
         <template v-if="fuel && altitude > 0">
             <Hud :altitude="altitude" :velocity="velocity" :fuel="fuel" :turn="turn" />
@@ -221,21 +221,8 @@ const shipStyle = computed(() => {
 
 <style scoped>
 .viewport {
-    /* position: relative;
-    width: 100%;
-    height: 100%;
-
-    overflow: hidden; */
-
     flex: 1 1 auto;
     position: relative;
-
-
-
-
-
-
-
 }
 
 /* Предотвращаем выделение и контекстное меню */
@@ -267,7 +254,7 @@ const shipStyle = computed(() => {
     /* aspect-ratio: 4 / 3; */
 }
 
-.space-background {
+.space-wrapper {
     width: 100%;
     height: 100%;
     display: block;
@@ -320,7 +307,7 @@ const shipStyle = computed(() => {
     top: 0;
     left: 50%;
     width: 90px;
-    height: 240px;
+    height: 200px;
     pointer-events: none;
     z-index: 3;
     will-change: transform;
@@ -366,7 +353,9 @@ const shipStyle = computed(() => {
         -webkit-overflow-scrolling: touch;
         overflow-scrolling: touch;
     }
-
+.full-img{
+    height: 74dvh;
+}
 }
 
 @media (max-width: 480px) {
@@ -374,10 +363,7 @@ const shipStyle = computed(() => {
         height: 30%;
     }
 
-    .ship {
-        width: 70px;
-        height: 180px;
-    }
+
 
     /* На самых маленьких экранах полностью отключаем зум */
     html {
