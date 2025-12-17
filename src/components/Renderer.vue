@@ -290,9 +290,8 @@ const shipStyle = computed(() => {
     position: absolute;
     left: 0;
     width: 100%;
-    /* height: 100%; */
-    /* min-height: 100%; */
-    object-fit: cover;
+    min-height: 100%;
+    /* object-fit: contain; */
     object-position: top;
     pointer-events: none;
     z-index: 2;

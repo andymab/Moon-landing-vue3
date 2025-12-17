@@ -116,6 +116,7 @@ function emitReset() { emit('reset') }
     align-items: center;
     gap: 8px;
     width: 100%;
+    margin-bottom: 0.8rem;
 }
 
 input[type=range] {
@@ -147,6 +148,7 @@ button:disabled {
     align-items: center;
     justify-content: space-between;
     width: 100%;
+    margin-bottom: 0.8rem;
 }
 
 .control-group h4,
