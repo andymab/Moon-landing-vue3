@@ -1,0 +1,132 @@
+{
+  "celestial_bodies": {
+    "planets": [
+      {
+        "name": "Земля",
+        "radius_km": 6371,
+        "gravity_m_s2": 9.81,
+        "first_cosmic_velocity_m_s": 7905
+      },
+      {
+        "name": "Венера",
+        "radius_km": 6056,
+        "gravity_m_s2": 8.85,
+        "first_cosmic_velocity_m_s": 7321
+      },
+      {
+        "name": "Марс",
+        "radius_km": 3394,
+        "gravity_m_s2": 3.72,
+        "first_cosmic_velocity_m_s": 3553
+      },
+      {
+        "name": "Меркурий",
+        "radius_km": 2440,
+        "gravity_m_s2": 3.70,
+        "first_cosmic_velocity_m_s": 3005
+      },
+      {
+        "name": "Плутон",
+        "radius_km": 1500,
+        "gravity_m_s2": 0.4,
+        "first_cosmic_velocity_m_s": 780
+      }
+    ],
+    "jupiter_moons": [
+      {
+        "name": "Ио",
+        "radius_km": 1815,
+        "gravity_m_s2": 1.80,
+        "first_cosmic_velocity_m_s": 1807
+      },
+      {
+        "name": "Европа",
+        "radius_km": 1569,
+        "gravity_m_s2": 1.32,
+        "first_cosmic_velocity_m_s": 1437
+      },
+      {
+        "name": "Ганимед",
+        "radius_km": 2631,
+        "gravity_m_s2": 1.43,
+        "first_cosmic_velocity_m_s": 1943
+      },
+      {
+        "name": "Каллисто",
+        "radius_km": 2400,
+        "gravity_m_s2": 1.23,
+        "first_cosmic_velocity_m_s": 1715
+      }
+    ],
+    "saturn_moons": [
+      {
+        "name": "Мимас",
+        "radius_km": 196,
+        "gravity_m_s2": 0.06,
+        "first_cosmic_velocity_m_s": 102
+      },
+      {
+        "name": "Энделад",
+        "radius_km": 250,
+        "gravity_m_s2": 0.08,
+        "first_cosmic_velocity_m_s": 143
+      },
+      {
+        "name": "Тефия",
+        "radius_km": 530,
+        "gravity_m_s2": 0.15,
+        "first_cosmic_velocity_m_s": 283
+      },
+      {
+        "name": "Диона",
+        "radius_km": 560,
+        "gravity_m_s2": 0.22,
+        "first_cosmic_velocity_m_s": 351
+      },
+      {
+        "name": "Рея",
+        "radius_km": 765,
+        "gravity_m_s2": 0.26,
+        "first_cosmic_velocity_m_s": 447
+      },
+      {
+        "name": "Титан",
+        "radius_km": 2575,
+        "gravity_m_s2": 1.37,
+        "first_cosmic_velocity_m_s": 1881
+      },
+      {
+        "name": "Япет",
+        "radius_km": 730,
+        "gravity_m_s2": 0.14,
+        "first_cosmic_velocity_m_s": 317
+      }
+    ],
+    "other_moons": [
+      {
+        "name": "Луна",
+        "radius_km": 1738,
+        "gravity_m_s2": 1.62,
+        "first_cosmic_velocity_m_s": 1678
+      },
+      {
+        "name": "Тритон",
+        "radius_km": 2100,
+        "gravity_m_s2": 2.0,
+        "first_cosmic_velocity_m_s": 2049
+      },
+      {
+        "name": "Харон",
+        "radius_km": 650,
+        "gravity_m_s2": 0.2,
+        "first_cosmic_velocity_m_s": 350
+      },
+      {
+        "name": "Фобос",
+        "radius_km": 11,
+        "gravity_m_s2": 0.007,
+        "first_cosmic_velocity_m_s": 9
+      }
+    ]
+  }
+}
