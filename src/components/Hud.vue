@@ -138,7 +138,7 @@ label {
 /* Ёмкость */
 .fuel-tank {
     position: relative;
-    width: 14px;
+    width: 100%;
     height: 60px;
     border-radius: 4px;
     background: rgba(255, 255, 255, 0.08);

@@ -12,30 +12,32 @@
             <!-- Rocket (absolute) -->
             <div class="ship" :style="shipStyle" aria-hidden="false">
                 <svg width="90" height="260" viewBox="0 0 180 400" xmlns="http://www.w3.org/2000/svg">
-                    <g transform="translate(45,100)">
+                    <g transform="translate(90,200)">
+
+                        <!-- Корпус -->
                         <ellipse cx="0" cy="-20" rx="14" ry="42" fill="#e6e6e6" stroke="#999" />
+
                         <rect x="-16" y="-66" width="32" height="36" rx="8" fill="#cfcfcf" stroke="#999" />
+
                         <polygon points="-16,-66 0,-90 16,-66" fill="#d6d6d6" stroke="#999" />
+
+                        <!-- Боковые двигатели -->
                         <path d="M-16,6 L-40,26 L-16,36 Z" fill="#c33" />
                         <path d="M16,6 L40,26 L16,36 Z" fill="#c33" />
 
-                        <!-- Main engine flame (bottom) - PNG/WebP версия -->
-                        <g v-if="engine === 'retro' && thrust > 0" :style="{ opacity: flameOpacity }"
-                            class="flame-main">
-                            <!-- Используем foreignObject для HTML-контента -->
-                            <foreignObject x="-20" y="28" width="40" height="40">
-                                <img xmlns="http://www.w3.org/1999/xhtml" :src="flameImage" alt="Engine flame"
-                                    :style="flameStyle" />
-                            </foreignObject>
+                        <!-- 🔥 Основной двигатель (вниз) -->
+                        <g v-if="engine === 'retro' && thrust > 0" class="flame flame-main" :style="flameSvgStyle">
+
+                            <image :href="flameImage" x="-20" y="36" width="40" height="60"
+                                preserveAspectRatio="xMidYMin meet" />
                         </g>
 
-                        <!-- Retro engine flame (top) -->
-                        <g v-if="engine === 'main' && thrust > 0" transform="translate(0,-100)"
-                            :style="{ opacity: flameOpacity }" class="flame-retro">
-                            <foreignObject x="-15" y="-28" width="30" height="30">
-                                <img xmlns="http://www.w3.org/1999/xhtml" :src="retroFlameImage"
-                                    alt="Retro engine flame" :style="flameStyle" />
-                            </foreignObject>
+                        <!-- 🔥 Ретро-двигатель (вверх) -->
+                        <g v-if="engine === 'main' && thrust > 0" class="flame flame-retro" :style="flameSvgStyle"
+                            transform="translate(0,-120) rotate(0)">
+
+                            <image :href="retroFlameImage" x="-15" y="0" width="30" height="45"
+                                preserveAspectRatio="xMidYMin meet" />
                         </g>
 
                     </g>
@@ -47,10 +49,10 @@
             <img :src="fuelEmty" class="full-img" />
         </template>
         <template v-else-if="altitude <= 0 && velocity <= 5">
-            <img :src="success_landing" class="full-img"  />
+            <img :src="success_landing" class="full-img" />
         </template>
         <template v-else-if="altitude <= 0 && velocity > 5">
-                <img :src="crash_landing" class="full-img" />
+            <img :src="crash_landing" class="full-img" />
         </template>
         <template v-if="fuel && altitude > 0">
             <Hud :altitude="altitude" :velocity="velocity" :fuel="fuel" :turn="turn" />
@@ -123,6 +125,13 @@ const flameStyle = computed(() => ({
     transition: 'all 0.1s ease-out'
 }))
 
+const flameOpacity = computed(() => Math.min(1, (props.thrust ?? 0) / 80))
+
+const flameSvgStyle = computed(() => ({
+    opacity: flameOpacity.value,
+    // transform: `scaleY(${0.7 + props.thrust * 0.3})`
+
+}))
 
 
 const viewportH = 650 // высота viewport
@@ -169,7 +178,7 @@ const bgOffset = computed(() => {
     return Math.max(-60, Math.min(60, (props.maxAltitude - alt) * -0.02))
 })
 
-const flameOpacity = computed(() => Math.min(1, (props.thrust ?? 0) / 80))
+
 
 // Стиль для картинки поверхности
 const surfaceImageStyle = computed(() => {
@@ -306,14 +315,21 @@ const shipStyle = computed(() => {
     top: 0;
     left: 50%;
     width: 90px;
-    height: 200px;
+    height: 260px;
     pointer-events: none;
     z-index: 3;
-    will-change: transform;
-    /* Аппаратное ускорение для плавности */
-    transform: translateZ(0);
 }
 
+.flame image {
+    transform-origin: center top;
+}
+.flame-main image {
+    filter: drop-shadow(0 0 6px rgba(255,140,0,0.6));
+}
+
+.flame-retro image {
+    filter: drop-shadow(0 0 6px rgba(255,200,120,0.6));
+}
 
 /* Добавить медиа-запросы для мобильных */
 @media (max-width: 768px) {
@@ -341,20 +357,17 @@ const shipStyle = computed(() => {
         /* aspect-ratio: 16 / 10; */
     }
 
-    /* Более агрессивные меры против зума на iOS */
-    html,
-    body {
-        touch-action: pan-y;
-    }
+
 
     /* Отключаем стандартные жесты iOS */
     .viewport {
         -webkit-overflow-scrolling: touch;
         overflow-scrolling: touch;
     }
-.full-img{
-    height: 74dvh;
-}
+
+    .full-img {
+        height: 74dvh;
+    }
 }
 
 @media (max-width: 480px) {
@@ -362,12 +375,6 @@ const shipStyle = computed(() => {
         height: 30%;
     }
 
-
-
-    /* На самых маленьких экранах полностью отключаем зум */
-    html {
-        touch-action: pan-y;
-    }
 }
 
 /* Фикс для Samsung Internet */
@@ -377,10 +384,4 @@ const shipStyle = computed(() => {
     }
 }
 
-/* Фикс для Android Chrome */
-@media screen and (max-width: 768px) {
-    html {
-        touch-action: manipulation;
-    }
-}
 </style>
