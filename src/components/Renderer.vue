@@ -366,7 +366,7 @@ const shipStyle = computed(() => {
     }
 
     .full-img {
-        height: 74dvh;
+        height: 70dvh;
     }
 }
 

@@ -11,7 +11,7 @@
                 <label class="radio-label" :class="{ active: engineLocal === 'retro' }">
                     <input type="radio" v-model="engineLocal" value="retro" />
                     <!-- <span class="radio-dot"></span> -->
-                    <svg class="thrust-icon" viewBox="0 0 24 24" width="48" height="48"
+                    <svg class="thrust-icon" viewBox="0 0 24 24" width="36" height="36"
                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
                         <title>Маршевый двигатель</title>
                         <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
@@ -31,7 +31,7 @@
                 </label>
                 <label class="radio-label" :class="{ active: engineLocal === 'main' }">
                     <input type="radio" v-model="engineLocal" value="main" />
-                    <svg class="thrust-icon" viewBox="0 0 24 24" width="48" height="48"
+                    <svg class="thrust-icon" viewBox="0 0 24 24" width="36" height="36"
                         xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img">
                         <title>Посадочный двигатель</title>
                         <g fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"
@@ -170,7 +170,7 @@ label {
     align-items: center;
     gap: 8px;
     cursor: pointer;
-    padding: 8px 12px;
+    padding: 6px 12px;
     border-radius: 6px;
     background: rgba(0, 0, 0, 0.03);
     transition: all 0.2s;
